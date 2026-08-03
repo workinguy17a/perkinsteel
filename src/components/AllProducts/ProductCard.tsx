@@ -16,7 +16,10 @@ export default function ProductCard({ product }: any) {
             </h3>
             <div className="price-add-cart flex justify-between items-center mt-5">
                 <span className="prd-price font-bold text-3xl">
-                    {product.price}
+                    {new Intl.NumberFormat("ar-AE", {
+                        style: "currency",
+                        currency: "AED",
+                    }).format(product.price)}
                 </span>
                 <button className="prd-add-to-cart bg-red-700 text-white px-6 py-3 rounded-lg">
                     Add To Cart
