@@ -43,7 +43,10 @@ export default function ProductCard({ product }: Props) {
         <div className="mt-4 flex items-center justify-between">
 
           <span className="text-xl font-bold">
-            ${product.price}
+            {new Intl.NumberFormat("ar-AE", {
+    style: "currency",
+    currency: "AED",
+  }).format(product.price)}
           </span>
 
           <button className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition hover:bg-orange-500">
