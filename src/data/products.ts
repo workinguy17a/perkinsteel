@@ -1,4 +1,6 @@
-const products = [
+import { Product } from "@/types/product";
+
+const products: Product[] = [
     {
       id: 1,
       slug: "damascus-chef-knife",
