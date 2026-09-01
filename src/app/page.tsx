@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import { Product } from "@/types/product";
 import NewArrivals from "@/components/NewArrivals/NewArrivals";
 import KwCollections from "@/components/KwCollections/KwCollections";
 import AllProducts from "@/components/AllProducts/AllProducts";
@@ -25,7 +25,7 @@ export default async function Home() {
         products:
           data?.products
             .filter(
-              (product) =>
+            (product: Product) =>
                 product.featured === true
             )
             .slice(
