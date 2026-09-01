@@ -1,7 +1,7 @@
 import { GraphQLClient } from "graphql-request";
 
 const client = new GraphQLClient(
-  "https://perkinknives.net/graphql"
+  "http://admin.perkinssteel.com/graphql"
 );
 
 export async function getMenu() {

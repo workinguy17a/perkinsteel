@@ -1,31 +1,55 @@
+import { notFound } from "next/navigation";
 
-import Image from "next/image";
-import CategorySidebar from "@/components/Category/CategorySidebar";
-import CategoryContent from "@/components/Category/CategoryContent";
+import ProductService from "@/services/product.service";
+
 import InnerBanner from "@/components/Common/InnerBanner";
-function formatTitle(slug: string) {
-  return slug
-    .split("-")
-    .map(
-      word => word.charAt(0).toUpperCase() + word.slice(1)
-    )
-    .join(" ");
-}
+import CategoryContent from "@/components/Category/CategoryContent";
 
-interface PageProps {
+import CategoryService from "@/services/category.service";
+
+
+
+
+
+interface Props {
   params: Promise<{
     slug: string;
   }>;
 }
 
-export default async function CategoryPage({ params }: PageProps) {
+export default async function CategoryPage({
+  params,
+}: Props) {
   const { slug } = await params;
+
+  const [data, categories] = await Promise.all([
+  ProductService.getProductsByCategory(slug),
+  CategoryService.getCategories(),
+]);
+
+  if (!data) {
+    notFound();
+  }
+
+  //console.log(categories);
 
   return (
     <>
-    <InnerBanner />    
-    <CategoryContent />
-</>
+      <InnerBanner
+  title={data.category.name}
+  description={data.category.description}
+  image={data.category.bannerImage}
+  breadcrumbs={[
+    { label: "Home", href: "/" },
+    { label: data.category.name },
+  ]}
+/>
+
+      <CategoryContent
+    products={data.products}
+    category={data.category}
+    categories={categories}
+/>
+    </>
   );
 }
-

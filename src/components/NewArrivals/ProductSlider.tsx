@@ -1,12 +1,12 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/navigation";
 
-import ProductCard from "./ProductCard";
+import ProductCard from "@/components/Product/ProductCard";
+import { Product } from "@/types/product";
 
 interface Product {
   id: number;

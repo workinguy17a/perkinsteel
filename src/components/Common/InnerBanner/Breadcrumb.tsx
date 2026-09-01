@@ -1,29 +1,38 @@
 import Link from "next/link";
-import { BreadcrumbItem } from "@/types/page";
+import { BreadcrumbItem } from "./types";
 
-interface BreadcrumbProps {
+interface Props {
   items: BreadcrumbItem[];
 }
 
-export default function Breadcrumb({ items }: BreadcrumbProps) {
+export default function Breadcrumb({ items }: Props) {
   return (
-    <nav aria-label="Breadcrumb">
-      <ol className="flex items-center gap-2 text-sm text-white">
-        {items.map((item, index) => (
-          <li key={index} className="flex items-center gap-2">
-            {item.href ? (
-              <Link href={item.href} className="hover:text-primary transition">
-                {item.label}
-              </Link>
-            ) : (
-              <span>{item.label}</span>
-            )}
+    <nav aria-label="Breadcrumb" className="breadcrumb">
+      <ol className="flex items-center gap-2 text-sm">
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
 
-            {index < items.length - 1 && (
-              <span className="text-gray-300">/</span>
-            )}
-          </li>
-        ))}
+          return (
+            <li key={index} className="flex items-center">
+              {!isLast && item.href ? (
+                <Link
+                  href={item.href}
+                  className="hover:text-primary transition"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <span>{item.label}</span>
+              )}
+
+              {!isLast && (
+                <span className="mx-2">
+                  /
+                </span>
+              )}
+            </li>
+          );
+        })}
       </ol>
     </nav>
   );

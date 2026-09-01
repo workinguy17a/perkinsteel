@@ -5,19 +5,31 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 
-//import { Navigation } from "swiper/modules";
+import ProductCard from "@/components/Product/ProductCard";
+import { Product } from "@/types/product";
 
-import ProductCard from "./ProductCard";
+interface ProductSliderProps {
+  products: Product[];
+  setSwiper?: (swiper: any) => void;
+}
 
-export default function ProductSlider({ 
-  products, 
-  setSwiper, 
-}: any) {
+export default function ProductSlider({
+  products = [],
+  setSwiper,
+}: ProductSliderProps) {
+  if (!products.length) {
+    return (
+      <div className="py-10 text-center">
+        No Products Found
+      </div>
+    );
+  }
+
   return (
     <Swiper
       onSwiper={setSwiper}
       spaceBetween={25}
-      loop
+      loop={products.length > 5}
       breakpoints={{
         360: {
           slidesPerView: 2,
@@ -36,7 +48,7 @@ export default function ProductSlider({
         },
       }}
     >
-      {products.map((product: any) => (
+      {products.map((product) => (
         <SwiperSlide key={product.id}>
           <ProductCard product={product} />
         </SwiperSlide>

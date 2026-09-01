@@ -1,10 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
-//import { getMenu } from "@/lib/getMenu";
+import { getMenu } from "@/lib/getMenu";
 
-export default function Header() {
-    // const data: any = await getMenu();
-    // const menu = data.menus.nodes[0];
+export default async function Header() {
+    const data: any = await getMenu();
+
+    const menus = data?.menus?.nodes || [];
+    const lmenu = menus[0];
+    const rmenu = menus[1];
+
+    const leftItems = lmenu?.menuItems?.nodes || [];
+    const rightItems = rmenu?.menuItems?.nodes || [];
+
   return (
     <header className="header-section">
         <div className="w-full">
@@ -14,10 +21,13 @@ export default function Header() {
                     { /* Left Menu */ }
                     <div className="w-full lg:w-1/3">
                         <ul className="header-menu left-menu">
-                            <li><a href="#" className="active">Home</a></li>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Blogs</a></li>
-                            <li><a href="#">Contact Us</a></li>
+                            {leftItems.map((item: any) => (
+                            <li key={`${item.path}-${item.label}`}>
+                                <Link href={item.path || "#"} className="hover:text-red-600">
+                                {item.label}
+                                </Link>
+                            </li>
+                            ))}
                         </ul>
                     </div>
 
@@ -31,10 +41,13 @@ export default function Header() {
                     { /*Right Menu */ }
                     <div className="w-full lg:w-1/3">
                         <ul className="header-menu right-menu">
-                            <li><a href="#">Knives</a></li>
-                            <li><a href="#">Kitchenware</a></li>
-                            <li><a href="#">Linen</a></li>
-                            <li><a href="#">Cleaning & Janitorial</a></li>
+                            {rightItems.map((item: any) => (
+                            <li key={`${item.path}-${item.label}`}>
+                                <Link href={item.path || "#"} className="hover:text-red-600">
+                                {item.label}
+                                </Link>
+                            </li>
+                            ))}
                         </ul>
                     </div>
                 </div>

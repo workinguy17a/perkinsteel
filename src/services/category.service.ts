@@ -1,8 +1,18 @@
-import categories from "@/data/categories";
-import { PageData } from "@/types/page";
+import { graphqlFetch } from "@/graphql/fetcher";
+import { GET_PRODUCT_CATEGORIES } from "@/graphql/queries/categories";
+import { mapCategory } from "@/mappers/category.mapper";
+import { Category } from "@/types/category";
 
 class CategoryService {
-  getCategory(slug: string): PageData | null {
+  async getCategories(): Promise<Category[]> {
+    const data: any = await graphqlFetch(GET_PRODUCT_CATEGORIES);
+
+    return data.productCategories.nodes.map(mapCategory);
+  }
+
+  async getCategory(slug: string): Promise<Category | null> {
+    const categories = await this.getCategories();
+
     return (
       categories.find((category) => category.slug === slug) ?? null
     );
@@ -10,3 +20,4 @@ class CategoryService {
 }
 
 export default new CategoryService();
+

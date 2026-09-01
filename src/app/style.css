@@ -360,3 +360,7 @@ section.testimonial-section>div {position: relative;}
 
 /* Inner Banner */
 section.inner-banner {padding: 8% 0;}
+nav.breadcrumb {font-size: 16px;font-weight: 500;color: #fff;}
+nav.breadcrumb li:last-child span {color: var(--red);}
+.inner-content-wrap h1 {font-size: 50px;color: var(--red);font-weight: 700;font-family: play;}
+.inner-content-wrap p {color: var(--white);font-size: 18px;}

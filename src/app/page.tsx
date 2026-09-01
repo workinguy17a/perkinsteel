@@ -1,11 +1,50 @@
 import Image from "next/image";
-import FeaturedProducts from "@/components/FeaturedProducts/FeaturedProducts";
+
 import NewArrivals from "@/components/NewArrivals/NewArrivals";
 import KwCollections from "@/components/KwCollections/KwCollections";
 import AllProducts from "@/components/AllProducts/AllProducts";
 import Testimonials from "@/components/ClientTestimonials/ClientTestimonials";
+import ProductService from "@/services/product.service";
+import HomepageService from "@/services/homepage.service";
+import FeaturedProducts from "@/components/FeaturedProducts/FeaturedProducts";
 
-export default function Home() {
+export default async function Home() {
+    const products = await ProductService.getProducts();
+    const homepage = await HomepageService.getHomepage();
+    const categoryProductData = await Promise.all(
+  homepage.featuredProductCategories.map(
+    async (category) => {
+      const data =
+        await ProductService.getProductsByCategory(
+          category.slug,
+          100
+        );
+
+      return {
+        category,
+        products:
+          data?.products
+            .filter(
+              (product) =>
+                product.featured === true
+            )
+            .slice(
+              0,
+              homepage.productsPerCategory
+            ) ?? [],
+      };
+    }
+  )
+);
+
+const latestProducts =
+  await ProductService.getLatestProducts(12);
+
+const randomProducts =
+  await ProductService.getRandomProducts(
+    12,
+    latestProducts.map((product) => product.id)
+  );
   return (
 <>
     <section className="hero-section w-full"
@@ -160,7 +199,9 @@ export default function Home() {
     </section>
 
     {/* Featured Product Sliders */}
-    <FeaturedProducts />
+   <FeaturedProducts
+  categories={categoryProductData}
+/>
 
     {/* Welcome Section */}
     <section className="welcome-section" style={{backgroundImage:"url(assets/image/perkin-welcome.webp)"}}>
@@ -192,7 +233,7 @@ export default function Home() {
 
 
    {/* New Product Sliders */}
-    <NewArrivals />
+    <NewArrivals products={latestProducts} />
 
     {/* Industry Section */}
 
@@ -319,7 +360,7 @@ export default function Home() {
     </section>
 
     {/* All Products Sliders */}
-    <AllProducts />
+    <AllProducts products={latestProducts}  />
 
     {/* Testimonials */}
     <Testimonials />

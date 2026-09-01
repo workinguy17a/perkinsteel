@@ -1,4 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
+
+import { Product } from "@/types/product";
+
+interface Props {
+  product: Product;
+}
 
 export default function ProductCard({ product }: any) {
   return (

@@ -1,27 +1,38 @@
 "use client";
+
 import Link from "next/link";
 
-const productCategories = [
-  "Knives",
-  "Kitchenware",
-  "Linen & Towels",
-  "Uniforms",
-  "Janitorials",
-];
+import { Category } from "@/types/category";
 
-const kitchenwareCollections = [
-  "Bakeware",
-  "Cutlery",
-  "Drinkware",
-  "Food Storage",
-  "Kitchen Essentials",
-  "Porcelain",
-  "Table Service",
-];
+interface CategorySidebarProps {
+  categories: Category[];
+  activeSlug: string;
+  minPrice: number;
+  maxPrice: number;
+  selectedPrice: number;
+
+  onPriceChange: (value: number) => void;
+
+  currency: string;
+}
+
+export default function CategorySidebar({
+  categories,
+  activeSlug,
+  minPrice,
+  maxPrice,
+  selectedPrice,
+  onPriceChange,
+  currency,
+}: CategorySidebarProps) {
+
+const activeCategory = categories.find(
+  (category) => category.slug === activeSlug
+);
+
+const childCategories = activeCategory?.children ?? [];
 
 
-
-export default function CategorySidebar() {
   return (
     <aside className="space-y-6">
 
@@ -35,13 +46,17 @@ export default function CategorySidebar() {
 
         <ul className="space-y-3">
 
-          {productCategories.map((category) => (
-            <li key={category}>
+          {categories.map((category) => (
+            <li key={category.id}>
               <Link
-                href="#"
-                className="flex items-center justify-between text-sm hover:text-red-600"
+                href={`/category/${category.slug}`}
+                className={`flex items-center justify-between text-sm transition hover:text-red-600 ${
+                  activeSlug === category.slug
+                    ? "font-semibold text-red-600"
+                    : ""
+                }`}
               >
-                <span>{category}</span>
+                <span>{category.name}</span>
 
                 <span>›</span>
               </Link>
@@ -52,32 +67,35 @@ export default function CategorySidebar() {
 
       </div>
 
-      {/* Kitchenware Collections */}
+      {/* Children Collections */}
 
+      {childCategories.length > 0 && (
       <div className="rounded-xl border border-gray-200 bg-white p-5">
 
         <h3 className="mb-4 border-b pb-3 text-lg font-semibold">
-          Kitchenware Collections
+          {activeCategory?.name} Collections
         </h3>
 
         <ul className="space-y-3">
+          {childCategories.map((category) => (
 
-          {kitchenwareCollections.map((collection) => (
-            <li key={collection}>
-              <Link
-                href="#"
-                className="flex items-center justify-between text-sm hover:text-red-600"
-              >
-                <span>{collection}</span>
+              <li key={category.id}>
+                <Link
+                  href={`/category/${category.slug}`}
+                  className="flex items-center justify-between text-sm hover:text-red-600"
+                >
+                  <span>{category.name}</span>
 
-                <span>›</span>
-              </Link>
-            </li>
-          ))}
+                  <span>›</span>
+                </Link>
+              </li>
 
-        </ul>
+            ))}
 
-      </div>
+          </ul>
+
+        </div>
+      )}
 
       {/* Price Filter */}
 
@@ -87,22 +105,29 @@ export default function CategorySidebar() {
           Price Filter
         </h3>
 
-        <div className="flex justify-between text-sm mb-3">
-          <span>AED 0</span>
-          <span>AED 500+</span>
+        <div className="mb-3 flex justify-between text-sm">
+          <span>
+            {currency}
+            {minPrice}
+          </span>
+
+          <span>
+            {currency}
+            {selectedPrice}
+          </span>
         </div>
 
         <input
           type="range"
-          min="0"
-          max="500"
-          defaultValue="150"
+          min={minPrice}
+          max={maxPrice}
+          value={selectedPrice}
+          onChange={(e) =>
+            onPriceChange(Number(e.target.value))
+          }
           className="w-full accent-red-600"
         />
 
-        <button className="mt-5 w-full rounded-lg bg-red-700 py-2 text-white hover:bg-red-800 transition">
-          Filter
-        </button>
 
       </div>
 

@@ -1,26 +1,26 @@
-"use client";
+import { InnerBannerProps } from "./types";
 
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-
-import PageResolver from "@/lib/resolver/pageResolver";
 import Breadcrumb from "./Breadcrumb";
+import BannerActions from "./BannerActions";
 
-export default function InnerBanner() {
-  const pathname = usePathname();
-
-  const page = PageResolver.resolve(pathname);
-
-  if (!page) return null;
+export default function InnerBanner({
+  title,
+  description,
+  image,
+  breadcrumbs,
+  actions,
+  className,
+}: InnerBannerProps) {
 
   return (
 <section
   className="inner-banner w-full"
   style={{
-    backgroundImage: `url(${page.banner.image})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
+    backgroundImage: image
+          ? `url(${image})`
+          : undefined,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
   }}
 >
 
@@ -28,22 +28,24 @@ export default function InnerBanner() {
 
             <div className="flex flex-wrap">
 
-                <div className="w-full lg:w-1/2">
+                <div className="w-full lg:w-8/12">
 
                     <div className="inner-content-wrap">
 
                         {/* Breadcrumb */}
 
-                        <Breadcrumb items={page.banner.breadcrumbs} />
-                        <h1>{page.banner.title}</h1>
-                        <p>High-quality cookware, utensils and essentials designed for professional performance and everyday convenience.</p>
+                        <Breadcrumb items={breadcrumbs} />
+                         {title && <h1>{title}</h1>}
+                        {description && (
+                                <p>{description}</p>
+                            )}
 
                     </div>
 
-                    <div className="btn-wrapper">
-                        <a href="#" className="cta-btn btn">Shop Now</a>
-                        <a href="#" className="cta-btn btn-white btn">Request Quote</a>
-                    </div>
+                    {actions && actions.length > 0 && (
+                    <BannerActions actions={actions} />
+                    )}
+                    
 
                     <div className="side-icons">
                         <a href="#"><i className="fas fa-search"></i></a>

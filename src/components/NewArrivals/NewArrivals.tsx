@@ -2,12 +2,17 @@
 
 import { useState } from "react";
 
-import ProductSlider from "./ProductSlider";
-import products from "./products";
+import ProductSlider from "@/components/FeaturedProducts/ProductSlider";
+import { Product } from "@/types/product";
 
+interface LatestProductsProps {
+  products: Product[];
+}
 
-export default function NewArrivals() {
-
+export default function NewArrivals({
+  products,
+}: LatestProductsProps) {
+const [swiper, setSwiper] = useState<any>(null);
   return (
     <section className="featured-products py-16">
 
@@ -19,17 +24,17 @@ export default function NewArrivals() {
                 </h2>
                 {/* Arrows */}
                 <div className="flex gap-3">
-                    <button className="carousel-prev w-12 h-12 bg-black text-white rounded-lg">
+                    <button onClick={() => swiper?.slidePrev()} className="carousel-prev w-12 h-12 bg-black text-white rounded-lg">
                         <i className="fas fa-arrow-left"></i>
                     </button>
-                    <button className="carousel-next w-12 h-12 bg-black text-white rounded-lg">
+                    <button onClick={() => swiper?.slideNext()} className="carousel-next w-12 h-12 bg-black text-white rounded-lg">
                         <i className="fas fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-         <ProductSlider products={products} />
+        <ProductSlider products={products} setSwiper={setSwiper}  />
 
       </div>
 

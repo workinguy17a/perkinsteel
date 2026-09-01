@@ -2,11 +2,17 @@
 
 import { useState } from "react";
 
-import ProductSlider from "./ProductSlider";
-import products from "./products";
+import ProductSlider from "@/components/FeaturedProducts/ProductSlider";
+import { Product } from "@/types/product";
+
+interface RandomProductsProps {
+  products: Product[];
+}
 
 
-export default function AllProducts() {
+export default function AllProducts( {
+    products,
+}: RandomProductsProps) {
     const [swiper, setSwiper] = useState<any>(null);
   return (
     <section className="featured-products py-16">

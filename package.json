@@ -11,6 +11,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
     "@headlessui/react": "^2.2.10",
+    "embla-carousel-react": "^8.6.0",
     "graphql": "^16.14.2",
     "graphql-request": "^7.4.0",
     "next": "16.2.9",
