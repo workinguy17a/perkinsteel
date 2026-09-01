@@ -14,9 +14,9 @@ export interface Category {
   // Temporary optional while migrating to WP
   banner?: BannerData;
 
-  count: number;
+  count?: number;
 
   parentSlug?: string | null;
 
-  children: Category[];
+  children?: Category[];
 }
