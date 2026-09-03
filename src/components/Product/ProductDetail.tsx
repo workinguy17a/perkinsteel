@@ -18,6 +18,7 @@ export default function ProductDetail({
 const [selectedImage, setSelectedImage] = useState(
   product.image
 );
+const [quantity, setQuantity] = useState(1);
 
 const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -364,23 +365,12 @@ const handleAddToCart = async () => {
 
                 <div className="flex w-fit items-center rounded-lg border border-gray-300">
 
-                  <button
-                    type="button"
-                    className="px-4 py-2 text-lg"
-                  >
-                    −
-                  </button>
-
-                  <span className="px-4">
-                    1
-                  </span>
-
-                  <button
-                    type="button"
-                    className="px-4 py-2 text-lg"
-                  >
-                    +
-                  </button>
+                  <input
+                    type="number"
+                    min="1"
+                    value={quantity}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                  />
 
                 </div>
 
