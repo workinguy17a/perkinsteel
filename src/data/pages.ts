@@ -25,7 +25,7 @@ const pages: Record<string, PageData> = {
         { label: "Home", href: "/" },
         { label: "Contact Us" },
       ],
-      ctaButtons: [
+      actions: [
         {
           text: "Request Quote",
           url: "/contact",

@@ -4,8 +4,8 @@ export interface BreadcrumbItem {
 }
 
 export interface BannerAction {
-  label: string;
-  href: string;
+  text: string;
+  url: string;
   variant?: "primary" | "secondary";
 }
 
