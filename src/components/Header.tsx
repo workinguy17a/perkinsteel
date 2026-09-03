@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getMenu } from "@/lib/getMenu";
+import CartIcon from "./Header/CartIcon";
 
 export default async function Header() {
     const data: any = await getMenu();
@@ -11,6 +12,8 @@ export default async function Header() {
 
     const leftItems = lmenu?.menuItems?.nodes || [];
     const rightItems = rmenu?.menuItems?.nodes || [];
+
+    
 
   return (
     <header className="header-section">
@@ -52,6 +55,11 @@ export default async function Header() {
                     </div>
                 </div>
             </div>
+        </div>
+        <div className="side-icons">
+            <a href="#"><i className="fas fa-search"></i></a>
+            <a href="#"><i className="far fa-user"></i></a>
+            <CartIcon />
         </div>
     </header>
     );

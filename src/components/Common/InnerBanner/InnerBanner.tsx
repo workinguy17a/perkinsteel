@@ -44,14 +44,7 @@ export default function InnerBanner({
 
                     {actions && actions.length > 0 && (
                     <BannerActions actions={actions} />
-                    )}
-                    
-
-                    <div className="side-icons">
-                        <a href="#"><i className="fas fa-search"></i></a>
-                        <a href="#"><i className="far fa-user"></i></a>
-                        <a href="#"><i className="far fa-shopping-bag"></i></a>
-                    </div>
+                    )}  
 
                 </div>
 

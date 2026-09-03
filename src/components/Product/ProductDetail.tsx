@@ -48,27 +48,44 @@ const visibleThumbnails = gallery.slice(
 const [adding, setAdding] =
   useState(false);
 
-const handleAddToCart = async () => {
-  try {
-    setAdding(true);
+const [added, setAdded] =
+  useState(false);
 
-    await CartService.addItem(
-      product.id,
-      quantity
-    );
+const [cartError, setCartError] =
+  useState("");
 
-    console.log(
-      "Product added to cart"
-    );
-  } catch (error) {
-    console.error(
-      "Add to cart error:",
-      error
-    );
-  } finally {
-    setAdding(false);
-  }
-};
+const handleAddToCart =
+  async () => {
+    try {
+      setAdding(true);
+      setAdded(false);
+      setCartError("");
+
+      await CartService.addItem(
+        product.id,
+        quantity
+      );
+
+      setAdded(true);
+
+      setTimeout(() => {
+        setAdded(false);
+      }, 2000);
+    } catch (error) {
+      console.error(
+        "Add to cart error:",
+        error
+      );
+
+      setCartError(
+        error instanceof Error
+          ? error.message
+          : "Unable to add product to cart"
+      );
+    } finally {
+      setAdding(false);
+    }
+  };
 
   return (
     <main>
@@ -381,14 +398,15 @@ const handleAddToCart = async () => {
               <div className="flex flex-col gap-3 sm:flex-row">
 
                 <button
-                  type="button" onClick={handleAddToCart}
-  disabled={adding}
-                  className="rounded-lg bg-red-700 px-8 py-3 font-semibold text-white transition hover:bg-red-800"
+                  type="button"
+                  onClick={handleAddToCart}
+                  disabled={adding} className="rounded-lg bg-red-700 px-8 py-3 font-semibold text-white transition hover:bg-red-800"
                 >
-                 
-                {adding
-                  ? "Adding..."
-                  : "Add to Cart"}
+                  {adding
+                    ? "Adding..."
+                    : added
+                    ? "Added ✓"
+                    : "Add to Cart"}
                 </button>
 
                 <button
