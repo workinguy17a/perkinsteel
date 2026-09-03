@@ -8,12 +8,7 @@ import "swiper/css/navigation";
 import ProductCard from "@/components/Product/ProductCard";
 import { Product } from "@/types/product";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-}
+
 
 export default function ProductSlider({
   products,
@@ -22,8 +17,6 @@ export default function ProductSlider({
 }) {
   return (
     <Swiper
-      modules={[Navigation]}
-      navigation
       spaceBetween={25}
       breakpoints={{
         320: {
