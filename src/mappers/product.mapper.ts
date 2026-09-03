@@ -1,3 +1,4 @@
+import { Product } from "@/types/product";
 function parsePrice(price?: string | null): number {
   if (!price) return 0;
 
