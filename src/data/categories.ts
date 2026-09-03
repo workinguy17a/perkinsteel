@@ -18,7 +18,7 @@ const categories: PageData[] = [
         { label: "Kitchenware" },
       ],
 
-      ctaButtons: [],
+      actions: [],
     },
   },
 
@@ -38,7 +38,7 @@ const categories: PageData[] = [
         { label: "Knives" },
       ],
 
-      ctaButtons: [],
+      actions: [],
     },
   },
 ];
