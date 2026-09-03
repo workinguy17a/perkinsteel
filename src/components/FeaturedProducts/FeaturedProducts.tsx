@@ -26,9 +26,7 @@ export interface FeaturedProductCategory {
 
 
 export default function FeaturedProducts({
-  products,
   categories,
-  productsPerCategory,
 }: FeaturedProductsProps) {
   const [activeTab, setActiveTab] = useState(
   categories[0]?.category.slug ?? ""
