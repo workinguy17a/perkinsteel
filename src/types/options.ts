@@ -12,6 +12,7 @@ export interface GlobalOptions {
   phoneNumber: string;
   email: string;
   address: string;
+  bottomText:string;
   copyright: string;
 
   usp: {
