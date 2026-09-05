@@ -1,6 +1,18 @@
 import Link from "next/link";
+import { getMenu } from "@/lib/getMenu";
+import { OptionsService } from "@/services/options.service";
 
-export default function Footer() {
+export default async function Footer() {
+    const global =
+    await OptionsService.getGlobalOptions();
+    const data: any = await getMenu();
+
+    const menus = data?.menus?.nodes || [];
+    const lmenu = menus[1];
+    const catmenu = menus[0];
+
+    const leftItems = lmenu?.menuItems?.nodes || [];
+    const rightItems = catmenu?.menuItems?.nodes || [];
   return (
     <footer className="bg-black text-white">
         <div className="w-full">
@@ -10,44 +22,51 @@ export default function Footer() {
                     <div className="footer-1 footer-menu">
                         <h3>Quick Links</h3>
                         <ul>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Latest Editions</a></li>
-                            <li><a href="#">Blogs</a></li>
+                            {leftItems.map((item: any) => (
+                            <li key={`${item.path}-${item.label}`}>
+                                <Link href={item.path || "#"} className="hover:text-red-600">
+                                {item.label}
+                                </Link>
+                            </li>
+                            ))}
                         </ul>
                     </div>
 
                     <div className="footer-2 footer-info">
                         <div className="foot-logo">
                             <a href="#">
-                                <img src="/assets/image/logo.png" alt="Logo" className="max-w-full h-auto inline-block" />
+                                <img src={global.logo.url} alt="Logo" className="max-w-full h-auto inline-block" />
                             </a>
                         </div>
                         <div className="foot-text">
-                            <p>At Perkins, you’re not just investing in a knife, you are indulging in years of history poured into perfecting our designs.</p>
+                            <p>{global.bottomText}</p>
                         </div>
+                        
                         <div className="foot-social">
-                            <a href="#" className="fsocial"><i className="fa fa-facebook"></i></a>
-                            <a href="#" className="fsocial"><i className="fa fa-instagram"></i></a>
-                            <a href="#" className="fsocial"><i className="fa fa-amazon"></i></a>
+                            {global.socialLinks.map(
+                            (social, index) => (
+                            <a key={index} href={social.url} className="fsocial"><i className={`fa-brands fa-${social.icons}`}></i></a>
+                            )
+                            )}
                         </div>
                         <div className="foot-con-info">
-                            <a href="tel:+971581899532"><i className="fa fa-phone"></i>+971581899532</a>
-                            <a href="mailto:sales@perkinssteel.com"><i className="fa fa-envelope"></i>sales@perkinssteel.com</a>
-                            <a href="#"><i className="fa fa-marker"></i>Perkins Steel LLC, Sharjah Media City, UAE.</a>
+                            <a href={`tel:${global.phoneNumber}`}><i className="fa fa-phone"></i>{global.phoneNumber}</a>
+                            <a href={`mailto:${global.email}`}><i className="fa fa-envelope"></i>{global.email}</a>
+                            <a href="#"><i className="fa fa-marker"></i>{global.address}</a>
                         </div>
                     </div>
+                    
 
                     <div className="footer-3 footer-menu">
                         <h3>Categories</h3>
                         <ul>
-                            <li><a href="#">Knives</a></li>
-                            <li><a href="#">Kitchenware</a></li>
-                            <li><a href="#">Linen</a></li>
-                            <li><a href="#">Uniform</a></li>
-                            <li><a href="#">Towels</a></li>
-                            <li><a href="#">Cleaning & Janitorial</a></li>
+                            {rightItems.map((item: any) => (
+                            <li key={`${item.path}-${item.label}`}>
+                                <Link href={item.path || "#"} className="hover:text-red-600">
+                                {item.label}
+                                </Link>
+                            </li>
+                            ))}
                         </ul>
                     </div>
 
@@ -60,7 +79,7 @@ export default function Footer() {
                     <div className="flex flex-wrap -mx-0.5">
                         <div className="w-full lg:w-6/12">
                             <div className="copyright=text">
-                                <p>Copyright © 2026 Perkin Steel, All Rights Reserved</p>
+                                <p>{global.copyright}</p>
                             </div>
                         </div>
                         <div className="w-full lg:w-6/12">

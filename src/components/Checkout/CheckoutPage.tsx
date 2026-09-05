@@ -18,6 +18,16 @@ const [loading, setLoading] =
 const [placingOrder, setPlacingOrder] =
   useState(false);
 
+const [
+  paymentMethods,
+  setPaymentMethods,
+] = useState<any[]>([]);
+
+const [
+  selectedPaymentMethod,
+  setSelectedPaymentMethod,
+] = useState("");
+
 const [error, setError] =
   useState("");
 
@@ -54,13 +64,18 @@ const states =
       const [
         cartData,
         countriesResponse,
+        paymentResponse,
       ] = await Promise.all([
         CartService.getCart(),
         fetch("/api/countries"),
+        fetch("/api/payment-methods"),
       ]);
 
       const countriesData =
         await countriesResponse.json();
+
+      const paymentData =
+        await paymentResponse.json();
 
       setCart(cartData);
 
@@ -71,6 +86,20 @@ const states =
           "Countries error:",
           countriesData
         );
+      }
+
+      if (paymentResponse.ok) {
+        setPaymentMethods(
+          paymentData
+        );
+
+        if (
+          paymentData.length > 0
+        ) {
+          setSelectedPaymentMethod(
+            paymentData[0].id
+          );
+        }
       }
     } catch (error) {
       console.error(
@@ -112,6 +141,8 @@ const states =
 
   const updateWooCustomer = async () => {
   try {
+    setError("");
+
     const shippingAddress = {
       first_name: form.first_name,
       last_name: form.last_name,
@@ -142,8 +173,50 @@ const states =
       "Address update error:",
       error
     );
+
+    setError(
+      error instanceof Error
+        ? error.message
+        : "Unable to update address"
+    );
   }
 };
+
+useEffect(() => {
+  const hasRequiredAddress =
+    form.first_name &&
+    form.last_name &&
+    form.address_1 &&
+    form.city &&
+    form.postcode &&
+    form.country &&
+    (
+      states.length === 0 ||
+      form.state
+    );
+
+  if (!hasRequiredAddress) {
+    return;
+  }
+
+  const timeout =
+    setTimeout(() => {
+      updateWooCustomer();
+    }, 700);
+
+  return () => {
+    clearTimeout(timeout);
+  };
+}, [
+  form.first_name,
+  form.last_name,
+  form.address_1,
+  form.address_2,
+  form.city,
+  form.state,
+  form.postcode,
+  form.country,
+]);
 
   const handleSubmit = async (
     e: FormEvent
@@ -176,6 +249,18 @@ const states =
         phone: form.phone,
       };
 
+      if (
+        !selectedPaymentMethod
+      ) {
+        setError(
+          "Please select a payment method"
+        );
+
+        setPlacingOrder(false);
+
+        return;
+      }
+
       const result =
         await CartService.checkout({
           billing_address:
@@ -184,7 +269,7 @@ const states =
           shipping_address:
             shippingAddress,
 
-          payment_method: "cod",
+          payment_method: selectedPaymentMethod,
 
           payment_data: [],
 
@@ -398,13 +483,6 @@ const formatPrice = (
   )}
 </select>
 
-            <button
-            type="button"
-            onClick={updateWooCustomer}
-            >
-            Update Address
-            </button>
-
             {cart?.needs_shipping &&
                 cart?.shipping_rates?.map(
                     (shippingPackage: any) => (
@@ -529,17 +607,56 @@ const formatPrice = (
             </div>
 
           <div className="mt-8">
-            <label>
-              <input
-                type="radio"
-                checked
-                readOnly
-              />
+            <h3 className="font-semibold mb-4">
+              Payment Method
+            </h3>
 
-              <span className="ml-2">
-                Cash on Delivery
-              </span>
-            </label>
+            {paymentMethods.length === 0 ? (
+              <p>
+                No payment methods
+                available.
+              </p>
+            ) : (
+              paymentMethods.map(
+                (method: any) => (
+                  <label
+                    key={method.id}
+                    className="block py-3 border-b"
+                  >
+                    <div>
+                      <input
+                        type="radio"
+                        name="payment_method"
+                        value={method.id}
+                        checked={
+                          selectedPaymentMethod ===
+                          method.id
+                        }
+                        onChange={() =>
+                          setSelectedPaymentMethod(
+                            method.id
+                          )
+                        }
+                      />
+
+                      <span className="ml-2 font-medium">
+                        {method.title}
+                      </span>
+                    </div>
+
+                    {method.description && (
+                      <div
+                        className="ml-6 mt-2 text-sm"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            method.description,
+                        }}
+                      />
+                    )}
+                  </label>
+                )
+              )
+            )}
           </div>
 
           <button

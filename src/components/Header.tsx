@@ -7,8 +7,8 @@ export default async function Header() {
     const data: any = await getMenu();
 
     const menus = data?.menus?.nodes || [];
-    const lmenu = menus[0];
-    const rmenu = menus[1];
+    const lmenu = menus[1];
+    const rmenu = menus[2];
 
     const leftItems = lmenu?.menuItems?.nodes || [];
     const rightItems = rmenu?.menuItems?.nodes || [];

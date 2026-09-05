@@ -298,6 +298,7 @@ span.black-bg img {position: relative; height: 80px;}
 .kwcollection-card:hover span.black-bg {transform: translateY(-5px);}
 section.kw-collection {background-color: #f2f2f2;padding: 60px 0;}
 .kwcollection-card:hover h3 {color: var(--red);}
+.kwcollection-card {margin: 0 15px;}
 
 /* Hospitality */
 .hos-wrap h4 {text-align: right;background: linear-gradient(90deg, #00000000, var(--red));color: #fff;font-size: 20px;font-weight: 600;padding: 3px 25px 3px;width: 80%;position: absolute;bottom: 30px;right: 0;}
@@ -347,6 +348,7 @@ section.testimonial-section>div {position: relative;}
 .foot-text {margin: 25px 0;}
 .foot-social {margin-bottom: 25px;}
 .foot-con-info {display: flex;flex-direction: column; gap: 12px;}
+a.fsocial {font-size: 25px;margin: 0 5px;}
 .footer-menu {padding: 70px 0;}
 .footer-menu h3 {font-size: 24px;font-weight: 600;margin-bottom: 25px;}
 .footer-menu li a {line-height: 30px;}

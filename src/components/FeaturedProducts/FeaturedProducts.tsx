@@ -72,8 +72,9 @@ const [swiper, setSwiper] = useState<any>(null);
                 </button>
               ))}
             </div>
+      </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-3">
               <button
                 onClick={() => swiper?.slidePrev()}
                 className="carousel-prev w-12 h-12 bg-black text-white rounded-lg"
@@ -89,7 +90,7 @@ const [swiper, setSwiper] = useState<any>(null);
               </button>
             </div>
 
-          </div>
+          
         </div>
 
         

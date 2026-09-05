@@ -4,6 +4,8 @@ import { GET_PRODUCT_BY_SLUG } from "@/graphql/queries/product";
 import { GET_CATEGORY_PRODUCTS } from "@/graphql/queries/category-products";
 import { mapProduct } from "@/mappers/product.mapper";
 import { Product } from "@/types/product";
+import { GET_CATEGORY_CHILDREN } from "@/graphql/queries/category-children";
+import { ChildCategory } from "@/types/category";
 
 class ProductService {
   async getProducts(first = 500): Promise<Product[]> {
@@ -96,6 +98,54 @@ product.relatedProducts =
 
 return product;
   }
+
+  async getChildCategories(
+  parentSlug: string
+): Promise<ChildCategory[]> {
+  const data: any =
+    await graphqlFetch(
+      GET_CATEGORY_CHILDREN,
+      {
+        slug: parentSlug,
+      }
+    );
+
+  const children =
+    data?.productCategory
+      ?.children?.nodes ?? [];
+
+  return children.map(
+    (category: any) => ({
+      id:
+        category.databaseId,
+
+      name:
+        category.name,
+
+      slug:
+        category.slug,
+
+      description:
+        category.description ?? "",
+
+      image: {
+        url:
+          category
+            ?.acfProductCategory
+            ?.homeIcon
+            ?.node
+            ?.sourceUrl ?? "",
+
+        alt:
+          category
+            ?.acfProductCategory
+            ?.homeIcon
+            ?.node
+            ?.altText ?? "",
+      },
+    })
+  );
+}
   
 }
 

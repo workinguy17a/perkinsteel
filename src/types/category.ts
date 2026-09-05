@@ -20,3 +20,15 @@ export interface Category {
 
   children?: Category[];
 }
+
+export interface ChildCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string;
+
+  image: {
+    url: string;
+    alt: string;
+  };
+}
