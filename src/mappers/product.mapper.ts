@@ -1,8 +1,16 @@
 import { Product } from "@/types/product";
-function parsePrice(price?: string | null): number {
-  if (!price) return 0;
+function parsePrice(value?: string | null): number {
+  if (!value) return 0;
 
-  return Number(price.replace(/[^\d.]/g, ""));
+  const cleaned = value
+    .replace(/<[^>]*>/g, "")
+    .replace(/&(?:#\d+|#x[\da-f]+|[a-z]+);/gi, "")
+    .replace(/,/g, "")
+    .trim();
+
+  const match = cleaned.match(/\d+(?:\.\d+)?/);
+
+  return match ? Number(match[0]) : 0;
 }
 
 function getCurrency(price?: string | null): string {

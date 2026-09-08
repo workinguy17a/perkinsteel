@@ -342,19 +342,19 @@ const handleAddToCart =
 
                     <span className="text-3xl font-bold text-red-600">
                       {product.currency}
-                      {product.salePrice}
+                      {product.salePrice.toFixed(2)}
                     </span>
 
                     <span className="text-lg text-gray-400 line-through">
                       {product.currency}
-                      {product.regularPrice}
+                      {product.regularPrice.toFixed(2)}
                     </span>
 
                   </div>
                 ) : (
                   <span className="text-3xl font-bold">
                     {product.currency}
-                    {product.price}
+                     {(product.regularPrice ?? product.price).toFixed(2)}
                   </span>
                 )}
 

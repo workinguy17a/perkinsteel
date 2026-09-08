@@ -14,6 +14,7 @@ export default async function Footer() {
     const leftItems = lmenu?.menuItems?.nodes || [];
     const rightItems = catmenu?.menuItems?.nodes || [];
   return (
+    
     <footer className="bg-black text-white">
         <div className="w-full">
             <div className="max-w-7xl mx-auto px-4">

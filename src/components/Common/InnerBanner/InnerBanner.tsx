@@ -14,7 +14,7 @@ export default function InnerBanner({
 
   return (
 <section
-  className="inner-banner w-full"
+  className={`inner-banner w-full ${className ?? ""}`}
   style={{
     backgroundImage: image
           ? `url(${image})`

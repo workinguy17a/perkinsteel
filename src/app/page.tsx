@@ -7,6 +7,7 @@ import Testimonials from "@/components/ClientTestimonials/ClientTestimonials";
 import ProductService from "@/services/product.service";
 import HomepageService from "@/services/homepage.service";
 import FeaturedProducts from "@/components/FeaturedProducts/FeaturedProducts";
+import UspBar from "@/components/UspBar/UspBar";
 
 export default async function Home() {
     const products = await ProductService.getProducts();
@@ -148,6 +149,8 @@ const faqSection =
         </div>
 
     </section>
+
+    <UspBar />
 
     {/* Category Blocks */}
     <section className="category-section w-full">
@@ -547,7 +550,7 @@ const faqSection =
             </div>
         </div>
     </section>
-
+{/*
     <section className="hm-usp-bar">
         <div className="max-w-7xl mx-auto px-4">
             <div className="flex flex-wrap -mx-0.5">
@@ -578,7 +581,7 @@ const faqSection =
             </div>
         </div>
     </section>
-
+*/  }
     <section className="kw-collection-banner">
         <img src={midBanner.image.url}  alt={midBanner.image.alt} />
         <div className="kw-content">

@@ -283,6 +283,7 @@ section.welcome-section {background-position: center;background-attachment: fixe
 .hm-usp-box p span {background-color: var(--red);color: var(--white);padding: 5px 8px;}
 section.hm-usp-bar {background-color: var(--lightgrey);padding: 45px 0;}
 section.hm-usp-bar .flex .w-full:last-child .hm-usp-box {border-right: none;}
+.hm-usp-box i {font-size: 35px;}
 
 
 /* Home Kitchenware Collection */
@@ -361,8 +362,80 @@ a.fsocial {font-size: 25px;margin: 0 5px;}
 
 
 /* Inner Banner */
-section.inner-banner {padding: 8% 0;}
+section.inner-banner {padding: 150px 0 30px;height: 400px;}
 nav.breadcrumb {font-size: 16px;font-weight: 500;color: #fff;}
 nav.breadcrumb li:last-child span {color: var(--red);}
 .inner-content-wrap h1 {font-size: 50px;color: var(--red);font-weight: 700;font-family: play;}
 .inner-content-wrap p {color: var(--white);font-size: 18px;}
+section.inner-banner.product-detail-banner {padding: 150px 0 30px;background-color: #000;height: auto;}
+
+
+/** About Us Page **/
+
+/* who we are */
+.who-we-are {
+  width: 100%;
+  overflow: hidden;
+}
+
+.who-we-are-grid {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  align-items: stretch;
+}
+
+.who-we-are-image {
+  width: 100%;
+  min-height: 500px;
+}
+
+.who-we-are-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.who-we-are-content-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.who-we-are-content {
+  width: 100%;
+  max-width: 570px;
+  padding: 60px 40px;
+}
+.who-we-are-content h2 {
+    font-size: 24px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--red);
+}
+
+.who-we-are-content h3 {
+    font-size: 45px;
+    font-weight: 600;
+    text-transform: capitalize;
+    line-height: normal;
+}
+
+.who-we-are-content p {
+    padding-top: 20px;
+    line-height: 24px;
+}
+
+ul.aboutfeat {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 25px;
+    row-gap: 20px;
+}
+
+ul.aboutfeat li {
+    width: 50%;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: 500;
+}

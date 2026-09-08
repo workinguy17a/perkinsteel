@@ -26,6 +26,7 @@ export default async function ProductPage({
   return (
     <>
     <InnerBanner
+        className="product-detail-banner"
         breadcrumbs={[
           { label: "Home", href: "/" },
           ...(product.category

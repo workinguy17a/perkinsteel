@@ -47,7 +47,7 @@ const handleAddToCart = async () => {
 
       <Link href={`/product/${product.slug}`}>
 
-        <div className="product-image aspect-square overflow-hidden">
+        <div className="relative product-image aspect-square overflow-hidden">
 
           <Image
             src={product.image}
@@ -71,10 +71,8 @@ const handleAddToCart = async () => {
         <div className="price-add-cart flex justify-between items-center mt-5">
 
           <span className="prd-price font-bold text-3xl">
-            {new Intl.NumberFormat("ar-AE", {
-    style: "currency",
-    currency: "AED",
-  }).format(product.price)}
+            {product.currency}
+  {(product.regularPrice ?? product.price).toFixed(2)}
           </span>
           <button  className="prd-add-to-cart bg-red-700 text-white px-6 py-3 rounded-lg"
             type="button"
