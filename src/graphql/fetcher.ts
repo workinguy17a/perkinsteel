@@ -15,9 +15,7 @@ export async function graphqlFetch<T>(
         variables,
       }),
       // Good default for Next.js App Router
-      next: {
-        revalidate: 300,
-      },
+      cache: "no-store",
     }
   );
 
