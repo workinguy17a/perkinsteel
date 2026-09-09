@@ -8,6 +8,7 @@ import ProductService from "@/services/product.service";
 import HomepageService from "@/services/homepage.service";
 import FeaturedProducts from "@/components/FeaturedProducts/FeaturedProducts";
 import UspBar from "@/components/UspBar/UspBar";
+import Link from "next/link";
 
 export default async function Home() {
     const products = await ProductService.getProducts();
@@ -592,10 +593,13 @@ const faqSection =
             <h3>{midBanner.title}</h3>
             )}
             {midBanner.cta?.title && (            
-                <a href={midBanner.cta.url} target={
-                midBanner.cta
-                .target || undefined
-            } className="cta-btn btn">{midBanner.cta.title}</a>
+                <Link
+                href={midBanner.cta.url}
+                target={midBanner.cta.target || undefined}
+                className="cta-btn btn"
+                >
+                {midBanner.cta.title}
+                </Link>
             )}
 
         </div>

@@ -31,7 +31,15 @@ const activeCategory = categories.find(
 );
 
 const childCategories = activeCategory?.children ?? [];
+const childIds = new Set(
+  categories.flatMap((category) =>
+    (category.children ?? []).map((child) => child.id)
+  )
+);
 
+const parentCategories = categories.filter(
+  (category) => !childIds.has(category.id)
+);
 
   return (
     <aside className="space-y-6">
@@ -46,7 +54,7 @@ const childCategories = activeCategory?.children ?? [];
 
         <ul className="space-y-3">
 
-          {categories.map((category) => (
+          {parentCategories.map((category) => (
             <li key={category.id}>
               <Link
                 href={`/category/${category.slug}`}

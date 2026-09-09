@@ -1,4 +1,5 @@
 import { HomepageData } from "@/types/homepage";
+import { getFrontendUrl } from "@/utils/url";
 
 export function mapHomepage(data: any): HomepageData {
   const homepagefield = data.page?.homepagefield;
@@ -156,9 +157,10 @@ export function mapHomepage(data: any): HomepageData {
         homepagefield?.midBannerCta
         ?{
           title:
-            homepagefield?.midBannerCta.title ?? "",
-          url:
-            homepagefield?.midBannerCta.url ?? "#",
+            homepagefield?.midBannerCta.title ?? "",          
+          url: getFrontendUrl(
+              homepagefield.midBannerCta.url
+            ),
           target:
             homepagefield?.midBannerCta.target ?? "",
         }
