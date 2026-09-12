@@ -42,54 +42,80 @@ const handleAddToCart = async () => {
   }
 };
 
+const hasSale =
+  product.salePrice != null &&
+  product.regularPrice != null &&
+  product.salePrice < product.regularPrice;
+
   return (
-    <div className="product-card min-w-[260px] bg-[#f8f8f8] rounded-3xl p-4">
+    <div className="product-card flex h-full min-w-0 flex-col">
 
-      <Link href={`/product/${product.slug}`}>
+  {/* IMAGE */}
+  <div className="product-image relative aspect-[4/3] overflow-hidden">
+    <Link
+      href={`/product/${product.slug}`}
+      className="block h-full"
+    >
+      <Image
+        src={product.image}
+        alt={product.name}
+        fill
+        className="object-contain p-2 transition duration-500 group-hover:scale-105 sm:p-3"
+      />
+    </Link>
+  </div>
 
-        <div className="relative product-image aspect-square overflow-hidden">
+  {/* CONTENT */}
+  <div className="prd-info flex flex-1 flex-col pt-3 sm:pt-4">
 
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover transition duration-500 group-hover:scale-105"
-          />
+    <Link href={`/product/${product.slug}`}>
+      <h3 className="min-h-[48px] text-sm leading-6 sm:min-h-[52px] sm:text-base lg:min-h-[56px] lg:text-[18px] lg:leading-7">
+        {product.name}
+      </h3>
+    </Link>
 
-        </div>
+    <div className="price-add-cart mt-auto flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between">
 
-      </Link>
+      {/* PRICE */}
+      <span className="prd-price flex items-center font-bold">
+        {hasSale ? (
+          <>
+            <span className="saleprice">
+              {product.currency}
+              {product.salePrice!.toFixed(2)}
+            </span>
 
-      <div className="prd-info">
-
-        <Link href={`/product/${product.slug}`}>
-          <h3 className="mt-6 text-[18px] leading-7">
-            {product.name}
-          </h3>
-        </Link>
-
-        <div className="price-add-cart flex justify-between items-center mt-5">
-
-          <span className="prd-price font-bold text-3xl">
+            <span className="regprice line-through ">
+              {product.currency}
+              {product.regularPrice!.toFixed(2)}
+            </span>
+          </>
+        ) : (
+          <span className="regprice">
             {product.currency}
-  {(product.regularPrice ?? product.price).toFixed(2)}
+            {(product.regularPrice ?? product.price).toFixed(2)}
           </span>
-          <button  className="prd-add-to-cart bg-red-700 text-white px-6 py-3 rounded-lg"
-            type="button"
-            onClick={handleAddToCart}
-            disabled={adding}
-          >
-            {adding
-              ? "Adding..."
-              : added
-              ? "Added ✓"
-              : "Add to Cart"}
-          </button>
+        )}
+      </span>
 
-        </div>
-
-      </div>
+      {/* ADD TO CART */}
+      <button
+        type="button"
+        onClick={handleAddToCart}
+        disabled={adding}
+        className="prd-add-to-cart w-full rounded-lg bg-red-700 px-4 py-2.5 text-sm text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:px-5 sm:py-3"
+      >
+        {adding
+          ? "Adding..."
+          : added
+          ? "Added ✓"
+          : "Add to Cart"}
+      </button>
 
     </div>
+
+  </div>
+
+</div>
   );
 }

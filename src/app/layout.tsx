@@ -6,6 +6,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
 import "./style.css";
 // import "./all.min.css";
+import AnimationProvider from "@/components/animations/AnimationProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default function RootLayout({
         <Header />
 
         <main>
+          <AnimationProvider />
           {children}
         </main>
 

@@ -1,10 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import ProductSlider from "./ProductSlider";
 import { Product } from "@/types/product";
-import { HomepageFeaturedCategory } from "@/types/homepage";
 
 interface FeaturedProductsProps {
   categories: {
@@ -17,86 +16,105 @@ interface FeaturedProductsProps {
   }[];
 }
 
-
-export interface FeaturedProductCategory {
-  id: number;
-  name: string;
-  slug: string;
-}
-
-
 export default function FeaturedProducts({
   categories,
 }: FeaturedProductsProps) {
   const [activeTab, setActiveTab] = useState(
-  categories[0]?.category.slug ?? ""
-);
+    categories[0]?.category.slug ?? ""
+  );
 
-const activeCategory = categories.find(
-  (item) =>
-    item.category.slug === activeTab
-);
-const [swiper, setSwiper] = useState<any>(null);
-
-  
+  const [swiper, setSwiper] = useState<any>(null);
 
   if (!categories.length) {
     return null;
   }
 
+  const activeCategory = categories.find(
+    (item) => item.category.slug === activeTab
+  );
 
   return (
-    
-    <section className="featured-products py-16">
+    <section className="featured-products reveal fade-up">
       <div className="max-w-7xl mx-auto px-4">
 
-        <div className="flex justify-between items-start mb-8">
-          <div>
+        <div className="featured-products-head">
 
-            <h2 className="text-5xl font-bold text-black mb-4">
+          <div className="featured-products-heading">
+
+            <span className="featured-eyebrow">
+              Explore Our Collection
+            </span>
+
+            <h2>
               Featured Products
             </h2>
 
-            <div className="tabs flex flex-wrap items-center gap-4">
-               {categories.map((item) => (
-                <button
-                   key={item.category.id}
-                  onClick={() => setActiveTab(item.category.slug)}
-                  className={`rounded-full px-6 py-2 capitalize ${
-                    activeTab === item.category.slug
-                      ? "bg-black text-white"
-                      : "bg-gray-200"
-                  }`}
-                >
-                   {item.category.name}
-                </button>
-              ))}
-            </div>
-      </div>
+          </div>
 
-            <div className="flex gap-3">
-              <button
-                onClick={() => swiper?.slidePrev()}
-                className="carousel-prev w-12 h-12 bg-black text-white rounded-lg"
-              >
-                <i className="fas fa-arrow-left"></i>
-              </button>
+          <div className="featured-controls">
 
-              <button
-                onClick={() => swiper?.slideNext()}
-                className="carousel-next w-12 h-12 bg-black text-white rounded-lg"
-              >
-                <i className="fas fa-arrow-right"></i>
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => swiper?.slidePrev()}
+              className="carousel-prev"
+              aria-label="Previous products"
+            >
+              <i className="fas fa-arrow-left"></i>
+            </button>
 
-          
+            <button
+              type="button"
+              onClick={() => swiper?.slideNext()}
+              className="carousel-next"
+              aria-label="Next products"
+            >
+              <i className="fas fa-arrow-right"></i>
+            </button>
+
+          </div>
+
         </div>
 
-        
-        <ProductSlider
-          products={activeCategory?.products ?? []}  setSwiper={setSwiper} 
-        />
+
+        <div className="featured-tabs-wrap">
+
+          <div className="tabs">
+
+            {categories.map((item) => {
+
+              const isActive =
+                activeTab === item.category.slug;
+
+              return (
+                <button
+                  key={item.category.id}
+                  type="button"
+                  onClick={() =>
+                    setActiveTab(item.category.slug)
+                  }
+                  className={`featured-tab ${
+                    isActive ? "activecat" : ""
+                  }`}
+                >
+                  {item.category.name}
+                </button>
+              );
+            })}
+
+          </div>
+
+        </div>
+
+
+        <div
+          key={activeTab}
+          className="featured-slider-content"
+        >
+          <ProductSlider
+            products={activeCategory?.products ?? []}
+            setSwiper={setSwiper}
+          />
+        </div>
 
       </div>
     </section>

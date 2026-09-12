@@ -46,3 +46,27 @@ query GetCategoryProducts($slug: ID!, $first: Int = 500) {
   }
 }
 `;
+
+export const GET_MAIN_PRODUCT_CATEGORIES = `
+  query GetMainProductCategories {
+    productCategories(
+      first: 100
+      where: {
+        parent: 0
+        hideEmpty: true
+      }
+    ) {
+      nodes {
+        databaseId
+        name
+        slug
+        description
+
+        image {
+          sourceUrl
+          altText
+        }
+      }
+    }
+  }
+`;

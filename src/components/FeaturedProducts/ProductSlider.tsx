@@ -10,11 +10,12 @@ import { Product } from "@/types/product";
 
 interface ProductSliderProps {
   products: Product[];
+  desktopSlides?: number;
   setSwiper?: (swiper: any) => void;
 }
 
 export default function ProductSlider({
-  products = [],
+  products = [],desktopSlides = 5,
   setSwiper,
 }: ProductSliderProps) {
   if (!products.length) {
@@ -44,7 +45,7 @@ export default function ProductSlider({
         },
 
         1440: {
-          slidesPerView: 5,
+          slidesPerView: desktopSlides,
         },
       }}
     >

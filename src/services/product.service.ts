@@ -2,6 +2,8 @@ import { graphqlFetch } from "@/graphql/fetcher";
 import { GET_PRODUCTS } from "@/graphql/queries/products";
 import { GET_PRODUCT_BY_SLUG } from "@/graphql/queries/product";
 import { GET_CATEGORY_PRODUCTS } from "@/graphql/queries/category-products";
+import { GET_MAIN_PRODUCT_CATEGORIES,} from "@/graphql/queries/category-products";
+import {GET_BEST_SELLING_PRODUCTS,} from "@/graphql/queries/products";
 import { mapProduct } from "@/mappers/product.mapper";
 import { Product } from "@/types/product";
 import { GET_CATEGORY_CHILDREN } from "@/graphql/queries/category-children";
@@ -144,6 +146,62 @@ return product;
             ?.altText ?? "",
       },
     })
+  );
+}
+
+async getMainCategories() {
+  const data: any =
+    await graphqlFetch(
+      GET_MAIN_PRODUCT_CATEGORIES
+    );
+
+  return (
+    data?.productCategories?.nodes?.map(
+      (category: any) => ({
+        id:
+          category.databaseId,
+
+        name:
+          category.name ?? "",
+
+        slug:
+          category.slug ?? "",
+
+        description:
+          category.description ?? "",
+
+        image: {
+          url:
+            category.image
+              ?.sourceUrl ?? "",
+
+          alt:
+            category.image
+              ?.altText ?? "",
+        },
+
+        children: [],
+      })
+    ) ?? []
+  );
+}
+
+async getBestSellingProducts(
+  first = 10
+) {
+  const data: any =
+    await graphqlFetch(
+      GET_BEST_SELLING_PRODUCTS,
+      {
+        first,
+      }
+    );
+
+  return (
+    data?.products?.nodes?.map(
+      (node: any) =>
+        mapProduct(node)
+    ) ?? []
   );
 }
   

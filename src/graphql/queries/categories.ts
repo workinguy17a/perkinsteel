@@ -26,3 +26,4 @@ query GetProductCategories {
   }
 }
 `;
+

@@ -32,3 +32,4 @@ export interface ChildCategory {
     alt: string;
   };
 }
+
