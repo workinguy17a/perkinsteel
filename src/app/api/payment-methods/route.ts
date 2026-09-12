@@ -3,7 +3,7 @@ import crypto from "crypto";
 export const runtime = "nodejs";
 
 const WC_API =
-  "http://admin.perkinssteel.com/wp-json/wc/v3";
+  "https://admin.perkinssteel.com/wp-json/wc/v3";
 
 function encode(value: string) {
   return encodeURIComponent(value)

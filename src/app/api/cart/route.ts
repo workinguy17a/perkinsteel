@@ -1,5 +1,5 @@
 const STORE_API =
-  "http://admin.perkinssteel.com/wp-json/wc/store/v1";
+  "https://admin.perkinssteel.com/wp-json/wc/store/v1";
 
 export async function GET(request: Request) {
   const cartToken = request.headers.get("Cart-Token");

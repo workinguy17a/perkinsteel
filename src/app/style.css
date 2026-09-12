@@ -2490,14 +2490,9 @@ section.hm-usp-bar {
 
 .kw-collection-banner {
     position: relative;
-
-    width: 100%;
-    min-height: 560px;
-
     overflow: hidden;
 
-    display: flex;
-    align-items: center;
+    min-height: 520px;
 
     background: #111;
 
@@ -2528,7 +2523,7 @@ section.hm-usp-bar {
 }
 
 
-/* GRADIENT */
+/* OVERLAY */
 
 .kw-banner-overlay {
     position: absolute;
@@ -2539,11 +2534,10 @@ section.hm-usp-bar {
 
     background:
         linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.75) 0%,
-            rgba(0, 0, 0, 0.48) 35%,
-            rgba(0, 0, 0, 0.10) 68%,
-            rgba(0, 0, 0, 0) 100%
+            to bottom,
+            rgba(0, 0, 0, 0.18) 0%,
+            rgba(0, 0, 0, 0.08) 45%,
+            rgba(0, 0, 0, 0.15) 100%
         );
 }
 
@@ -2556,61 +2550,100 @@ section.hm-usp-bar {
     z-index: 2;
 
     width: 100%;
-    max-width: 1280px;
 
-    margin: 0 auto;
-    padding: 70px 16px;
+    padding: 75px 20px;
 
-    color: var(--white);
+    text-align: center;
+
+    color: #fff;
 }
 
+
+/* =========================================
+   CHILD ANIMATION
+========================================= */
 
 .kw-content > * {
-    max-width: 540px;
+    opacity: 0;
+
+    transform: translateY(24px);
+
+    transition:
+        opacity 0.65s ease,
+        transform 0.65s
+        cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 
-/* SUBTITLE */
+/* parent becomes visible */
 
+.kw-collection-banner.is-visible
 .kw-subtitle {
-    margin: 0 0 10px;
+    opacity: 1;
 
-    color: var(--red);
+    transform: translateY(0);
 
-    font-size: 14px;
+    transition-delay: 120ms;
+}
+
+
+.kw-collection-banner.is-visible
+h3 {
+    opacity: 1;
+
+    transform: translateY(0);
+
+    transition-delay: 220ms;
+}
+
+
+.kw-collection-banner.is-visible
+.kw-banner-cta-wrap {
+    opacity: 1;
+
+    transform: translateY(0);
+
+    transition-delay: 320ms;
+}
+
+.kw-content .kw-subtitle {
+    margin: 0;
+
+    font-size: 20px;
     font-weight: 700;
 
-    letter-spacing: 0.12em;
-
-    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 
-/* HEADING */
-
 .kw-content h3 {
-    margin: 0 0 26px;
+    margin: 15px 0 26px;
 
     font-family: play;
 
-    font-size: clamp(40px, 5vw, 64px);
-
+    font-size: 45px;
     font-weight: 700;
 
-    line-height: 1.05;
+    line-height: 1.08;
+}
+.kw-banner-cta-wrap {
+    display: flex;
 
-    color: var(--white);
+    justify-content: center;
 }
 
 
-/* CTA */
-
-.kw-content .kw-banner-cta {
+.kw-banner-cta {
     display: inline-flex;
 
     align-items: center;
 
     gap: 10px;
+
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 
@@ -2622,8 +2655,6 @@ section.hm-usp-bar {
 }
 
 
-/* DESKTOP HOVER */
-
 @media (hover: hover) {
 
     .kw-collection-banner:hover
@@ -2631,23 +2662,35 @@ section.hm-usp-bar {
         transform: scale(1.035);
     }
 
-    .kw-banner-cta:hover i {
-        transform: translateX(5px);
+    .kw-banner-cta:hover {
+        transform: translateY(-2px);
     }
+
+    .kw-banner-cta:hover i {
+        transform: translateX(4px);
+    }
+
 }
 
 @media (max-width: 1023px) {
 
     .kw-collection-banner {
-        min-height: 480px;
+        min-height: 460px;
     }
+
 
     .kw-content {
-        padding: 60px 30px;
+        padding: 65px 24px;
     }
 
+
+    .kw-content .kw-subtitle {
+        font-size: 18px;
+    }
+
+
     .kw-content h3 {
-        font-size: clamp(36px, 6vw, 52px);
+        font-size: 40px;
     }
 
 }
@@ -2655,45 +2698,24 @@ section.hm-usp-bar {
 @media (max-width: 767px) {
 
     .kw-collection-banner {
-        min-height: 430px;
-
-        align-items: flex-end;
+        min-height: 400px;
     }
 
-    .kw-banner-image {
-        object-position: center;
-    }
-
-    .kw-banner-overlay {
-        background:
-            linear-gradient(
-                to top,
-                rgba(0, 0, 0, 0.88) 0%,
-                rgba(0, 0, 0, 0.48) 48%,
-                rgba(0, 0, 0, 0.08) 80%
-            );
-    }
 
     .kw-content {
-        padding: 35px 20px;
+        padding: 50px 18px;
     }
 
-    .kw-content > * {
-        max-width: 100%;
+
+    .kw-content .kw-subtitle {
+        font-size: 15px;
     }
 
-    .kw-subtitle {
-        margin-bottom: 7px;
-
-        font-size: 12px;
-    }
 
     .kw-content h3 {
-        margin-bottom: 20px;
+        margin: 12px 0 22px;
 
-        font-size: clamp(30px, 9vw, 40px);
-
-        line-height: 1.08;
+        font-size: clamp(30px, 8vw, 36px);
     }
 
 }
@@ -2701,12 +2723,14 @@ section.hm-usp-bar {
 @media (max-width: 480px) {
 
     .kw-collection-banner {
-        min-height: 390px;
+        min-height: 360px;
     }
 
+
     .kw-content {
-        padding: 28px 18px;
+        padding: 42px 16px;
     }
+
 
     .kw-content h3 {
         font-size: 30px;
@@ -2714,7 +2738,21 @@ section.hm-usp-bar {
 
 }
 
+@media (prefers-reduced-motion: reduce) {
 
+    .kw-content > * {
+        opacity: 1 !important;
+
+        transform: none !important;
+
+        transition: none !important;
+    }
+
+    .kw-banner-image {
+        transition: none !important;
+    }
+
+}
 
 /* =========================================
    KITCHENWARE COLLECTION

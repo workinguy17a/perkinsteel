@@ -579,41 +579,25 @@ const faqSection =
         <div className="kw-content">
 
             {midBanner.subtitle && (
-                <p
-                    className="kw-subtitle reveal fade-up"
-                    style={{
-                        "--delay": "120ms",
-                    } as React.CSSProperties}
-                >
+                <p className="kw-subtitle">
                     {midBanner.subtitle}
                 </p>
             )}
 
             {midBanner.title && (
-                <h3
-                    className="reveal fade-up"
-                    style={{
-                        "--delay": "220ms",
-                    } as React.CSSProperties}
-                >
+                <h3>
                     {midBanner.title}
                 </h3>
             )}
 
             {midBanner.cta?.title && (
-                <div
-                    className="reveal fade-up"
-                    style={{
-                        "--delay": "320ms",
-                    } as React.CSSProperties}
-                >
+                <div className="kw-banner-cta-wrap">
                     <Link
                         href={midBanner.cta.url}
                         target={midBanner.cta.target || undefined}
                         className="cta-btn btn kw-banner-cta"
                     >
                         {midBanner.cta.title}
-
                         <i className="fa-solid fa-arrow-right"></i>
                     </Link>
                 </div>
