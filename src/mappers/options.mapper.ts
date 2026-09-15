@@ -44,5 +44,25 @@ export function mapGlobalOptions(
           text: item?.uspText ?? "",
         })
       ) ?? [],
+    
+    achievement:
+      global?.achievements?.map(
+        (item: any) => ({
+          image: {
+              url:
+                item?.icon
+                  ?.node
+                  ?.sourceUrl ?? "",
+
+              alt:
+                item?.icon
+                  ?.node
+                  ?.altText ?? "",
+            },
+
+          text:
+            item?.text ?? "",
+        })
+      ) ?? [],
   };
 }

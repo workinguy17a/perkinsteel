@@ -1,6 +1,6 @@
 import { graphqlFetch } from "@/graphql/fetcher";
 import { GET_PRODUCTS } from "@/graphql/queries/products";
-import { GET_PRODUCT_BY_SLUG } from "@/graphql/queries/product";
+import { GET_PRODUCT_BY_SLUG, GET_SHOP_PAGE, } from "@/graphql/queries/product";
 import { GET_CATEGORY_PRODUCTS } from "@/graphql/queries/category-products";
 import { GET_MAIN_PRODUCT_CATEGORIES,} from "@/graphql/queries/category-products";
 import {GET_BEST_SELLING_PRODUCTS,} from "@/graphql/queries/products";
@@ -58,22 +58,63 @@ async getRandomProducts(
       return null;
     }
 
+    const acf =
+  data.productCategory.acfProductCategory;
+
     return {
-      category: {
-        id: data.productCategory.databaseId,
-        name: data.productCategory.name,
-        slug: data.productCategory.slug,
-        description: data.productCategory.description,
+  category: {
+    id: data.productCategory.databaseId,
+    name: data.productCategory.name,
+    slug: data.productCategory.slug,
+    description:
+      data.productCategory.description ?? "",
 
-        bannerImage:
-          data.productCategory.acfProductCategory
-            ?.categoryBanner
-            ?.node
-            ?.sourceUrl ?? "",
-      },
+    bannerImage:
+      acf?.categoryBanner
+        ?.node
+        ?.sourceUrl ?? "",
 
-      products: data.productCategory.products.nodes.map(mapProduct),
-    };
+    shortTitle:
+      acf?.shortTitle ?? "",
+
+    categoryContent:
+      acf?.categoryContent ?? "",
+
+    categoryFaq:
+      acf?.categoryFaq?.map(
+        (item: any) => ({
+          question:
+            item.catQuestion ?? "",
+          answer:
+            item.catAnswer ?? "",
+        })
+      ) ?? [],
+
+      faqTitle:
+      acf?.faqTitle ?? "",
+
+      faqSubText:
+      acf?.faqSubText ?? "",
+      
+      faqCta: acf?.faqCta
+            ?{
+              title:
+                acf?.faqCta.title ?? "",
+
+              url:
+                acf?.faqCta.url ?? "#",
+
+              target:
+                acf?.faqCta.target ?? "",
+            }
+          : undefined,
+  },
+
+  products:
+    data.productCategory.products.nodes.map(
+      mapProduct
+    ),
+};
   }
 
   async getProductBySlug(
@@ -180,6 +221,9 @@ async getMainCategories() {
               ?.altText ?? "",
         },
 
+        shortTitle:
+          category.acfProductCategory?.shortTitle ?? "",
+
         children: [],
       })
     ) ?? []
@@ -203,6 +247,25 @@ async getBestSellingProducts(
         mapProduct(node)
     ) ?? []
   );
+}
+
+async getShopPage() {
+  const data: any =
+    await graphqlFetch(GET_SHOP_PAGE,
+      {
+        id: "7",
+      });
+
+  return {
+    title: data?.page?.title ?? "Shop",
+    description: data?.page?.content ?? "",
+    image: {
+      url:
+        data?.page?.featuredImage?.node?.sourceUrl ?? "",
+      alt:
+        data?.page?.featuredImage?.node?.altText ?? "",
+    },
+  };
 }
   
 }

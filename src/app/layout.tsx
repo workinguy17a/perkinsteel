@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import { Inter, Play } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Newsletter from "@/components/Newsletter/Newsletter";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
 import "./style.css";
+import "@/styles/common.css";
+import "@/styles/pages/woocommerce.css";
 // import "./all.min.css";
 import AnimationProvider from "@/components/animations/AnimationProvider";
 
@@ -38,7 +41,7 @@ export default function RootLayout({
           <AnimationProvider />
           {children}
         </main>
-
+        <Newsletter />
         <Footer />
       </body>
     </html>

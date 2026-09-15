@@ -1,21 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import InnerBanner from "@/components/Common/InnerBanner";
 import ProductService from "@/services/product.service";
 import BestSellingSlider from "@/components/Shop/BestSellingSlider";
 import ShopProductSlider from "@/components/Shop/ShopProductSlider";
+import UspBar from "@/components/Global/UspBar";
+import AchievementBar from "@/components/Global/acheivementBar";
+import Testimonials from "@/components/ClientTestimonials/ClientTestimonials";
 
 export const dynamic = "force-dynamic";
 
 export default async function ShopPage() {
-  const [
-    categories,
-    bestSellingProducts,
-  ] = await Promise.all([
-    ProductService.getMainCategories(),
-    ProductService.getBestSellingProducts(10),
-  ]); 
-
+   const [
+      shopPage,
+      categories,
+      bestSellingProducts,
+    ] = await Promise.all([
+      ProductService.getShopPage(),
+      ProductService.getMainCategories(),
+      ProductService.getBestSellingProducts(10),
+    ]); 
+    console.log("SHOP PAGE:", shopPage);
   const categorySections =
     await Promise.all(
       categories.map(
@@ -35,8 +40,25 @@ export default async function ShopPage() {
       )
     );
 
+    
+
   return (
     <main>
+      <InnerBanner
+        description={shopPage.description}
+        image={shopPage.image.url}
+        breadcrumbs={[
+          {
+            label: "Home",
+            href: "/",
+          },
+          {
+            label: shopPage.title,
+          },
+        ]}
+      />
+
+      <UspBar />
 
       {/* =========================
           SHOP BY CATEGORY
@@ -122,10 +144,11 @@ export default async function ShopPage() {
             return null;
           }
 
-          const isDark =
-            index % 2 === 0;
+          const isDark = index % 2 === 0;
+          const isReverse = index % 2 !== 0;
 
           return (
+            <div key={section.category.id}>
             <section
               key={
                 section.category.id
@@ -138,11 +161,19 @@ export default async function ShopPage() {
             >
               <div className="max-w-7xl mx-auto px-4">
 
-                <div className="flex flex-col gap-8 lg:flex-row lg:items-center">
+                <div
+                  className={`flex flex-col gap-8 lg:items-center ${
+                    isReverse
+                      ? "lg:flex-row-reverse"
+                      : "lg:flex-row"
+                  }`}
+                >
                     <div className="w-full lg:basis-[24%] lg:shrink-0">
+                      {section.category.shortTitle && (
                         <span className="mb-2 block text-xs font-semibold uppercase text-red-600">
-                        {section.category.name}
+                        {section.category.shortTitle}
                         </span>
+                      )}
 
                         <h2 className="mb-4 text-2xl font-bold leading-tight sm:text-[28px]">
                         {section.category.name} Collection
@@ -163,23 +194,33 @@ export default async function ShopPage() {
 
                         <Link
                         href={`/category/${section.category.slug}`}
-                        className="inline-flex items-center justify-center rounded bg-red-700 px-6 py-3 text-sm font-medium text-white transition hover:bg-red-800"
+                        className="cta-btn"
                         >
                         Shop Now
                         </Link>
                     </div>
 
                     <div className="min-w-0 w-full lg:flex-1">
-                        <ShopProductSlider products={section.products} desktopSlides={4} />
+                        <ShopProductSlider products={section.products} desktopSlides={4} arrowsLeft={isReverse} />
                     </div>
 
                     </div>
 
               </div>
             </section>
+            {section.category.slug === "kitchenware" && (
+              <AchievementBar />
+            )}
+            </div>
+            
           );
+          
         }
       )}
+
+      {/* Testimonials */}
+          <Testimonials />
+      
 
     </main>
   );

@@ -7,8 +7,11 @@ import {
 } from "react";
 
 import CartService from "@/services/cart.service";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
+
+  const router = useRouter();
   const [cart, setCart] =
   useState<any>(null);
 
@@ -65,10 +68,18 @@ const states =
         cartData,
         countriesResponse,
         paymentResponse,
+        customerResponse,
       ] = await Promise.all([
         CartService.getCart(),
+
         fetch("/api/countries"),
+
         fetch("/api/payment-methods"),
+
+        fetch("/api/account/customer", {
+          credentials: "include",
+          cache: "no-store",
+        }),
       ]);
 
       const countriesData =
@@ -77,7 +88,87 @@ const states =
       const paymentData =
         await paymentResponse.json();
 
+      let customerData: any = null;
+
+      if (customerResponse.ok) {
+        customerData =
+          await customerResponse.json();
+      }
+
       setCart(cartData);
+
+      if (
+        customerData?.authenticated &&
+        customerData?.customer
+      ) {
+        const customer =
+          customerData.customer;
+
+        const billing =
+          customer.billing ?? {};
+
+        const shipping =
+          customer.shipping ?? {};
+
+        setForm((current) => ({
+          ...current,
+
+          first_name:
+            billing.first_name ||
+            shipping.first_name ||
+            customer.first_name ||
+            "",
+
+          last_name:
+            billing.last_name ||
+            shipping.last_name ||
+            customer.last_name ||
+            "",
+
+          company:
+            billing.company ||
+            shipping.company ||
+            "",
+
+          address_1:
+            billing.address_1 ||
+            shipping.address_1 ||
+            "",
+
+          address_2:
+            billing.address_2 ||
+            shipping.address_2 ||
+            "",
+
+          city:
+            billing.city ||
+            shipping.city ||
+            "",
+
+          state:
+            billing.state ||
+            shipping.state ||
+            "",
+
+          postcode:
+            billing.postcode ||
+            shipping.postcode ||
+            "",
+
+          country:
+            billing.country ||
+            shipping.country ||
+            current.country,
+
+          email:
+            billing.email ||
+            customer.email ||
+            "",
+
+          phone:
+            billing.phone || "",
+        }));
+      }
 
       if (countriesResponse.ok) {
         setCountries(countriesData);
@@ -249,6 +340,42 @@ useEffect(() => {
         phone: form.phone,
       };
 
+      try {
+        const customerResponse = await fetch(
+          "/api/account/customer",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              billing: billingAddress,
+              shipping: shippingAddress,
+            }),
+          }
+        );
+
+        // 401 simply means guest checkout.
+        if (
+          !customerResponse.ok &&
+          customerResponse.status !== 401
+        ) {
+          const customerError =
+            await customerResponse.json();
+
+          console.error(
+            "Unable to save customer address:",
+            customerError
+          );
+        }
+      } catch (customerError) {
+        console.error(
+          "Unable to save customer address:",
+          customerError
+        );
+      }
+
       if (
         !selectedPaymentMethod
       ) {
@@ -285,20 +412,44 @@ useEffect(() => {
         result
       );
 
+     const redirectUrl =
+        result?.payment_result?.redirect_url;
+
+      // WooCommerce has completed the order and is trying
+      // to send the customer to the WP thank-you page.
       if (
-        result?.payment_result
-          ?.redirect_url
+        result?.order_id &&
+        redirectUrl?.includes("/order-received/")
       ) {
+        const wooRedirect = new URL(redirectUrl);
+
+        const orderKey =
+          wooRedirect.searchParams.get("key") ??
+          result.order_key ??
+          "";
+
         window.location.href =
-          result.payment_result
-            .redirect_url;
+          `/order-received?order=${result.order_id}&key=${encodeURIComponent(
+            orderKey
+          )}`;
 
         return;
       }
 
+      // External payment gateway redirect
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+        return;
+      }
+
+      // Successful order with no redirect URL
       if (result?.order_id) {
         window.location.href =
-          `/order-success?order=${result.order_id}`;
+          `/order-received?order=${result.order_id}&key=${encodeURIComponent(
+            result.order_key ?? ""
+          )}`;
+
+        return;
       }
     } catch (error) {
       console.error(error);
@@ -345,333 +496,786 @@ const formatPrice = (
 };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-3xl mb-10">
-        Checkout
-      </h1>
+    <section className="checkout-page">
 
-      <form
-        onSubmit={handleSubmit}
-        className="grid lg:grid-cols-3 gap-10"
-      >
-        <div className="lg:col-span-2">
+  <div className="max-w-7xl mx-auto px-4">
 
-          <div className="grid md:grid-cols-2 gap-4">
+    {/* =========================================
+        PAGE HEADER
+    ========================================= */}
 
-            <input
-              name="first_name"
-              value={form.first_name}
-              onChange={handleChange}
-              placeholder="First Name"
-              required
-            />
+    <div className="checkout-page-header reveal fade-up">
 
-            <input
-              name="last_name"
-              value={form.last_name}
-              onChange={handleChange}
-              placeholder="Last Name"
-              required
-            />
+      <h1>Checkout</h1>
 
-            <input
-              name="company"
-              value={form.company}
-              onChange={handleChange}
-              placeholder="Company"
-            />
+      <div className="checkout-secure-label">
+        <i className="fa-solid fa-lock"></i>
+        Secure Checkout
+      </div>
 
-            <input
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Email"
-              required
-            />
+    </div>
 
-            <input
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="Phone"
-              required
-            />
 
-            <input
-              name="address_1"
-              value={form.address_1}
-              onChange={handleChange}
-              placeholder="Address"
-              required
-            />
+    <form
+      onSubmit={handleSubmit}
+      className="checkout-layout"
+    >
 
-            <input
-              name="address_2"
-              value={form.address_2}
-              onChange={handleChange}
-              placeholder="Apartment / Suite"
-            />
+      {/* =========================================
+          CUSTOMER DETAILS
+      ========================================= */}
 
-            <input
-              name="city"
-              value={form.city}
-              onChange={handleChange}
-              placeholder="City"
-              required
-            />
+      <div className="checkout-details reveal fade-right">
 
-            {states.length > 0 ? (
-  <select
-    name="state"
-    value={form.state}
-    onChange={handleChange}
-    required
-  >
-    <option value="">
-      Select State / Province
-    </option>
+        {/* CONTACT */}
 
-    {states.map(
-      (state: any) => (
-        <option
-          key={state.code}
-          value={state.code}
-        >
-          {state.name}
-        </option>
-      )
-    )}
-  </select>
-) : (
-  <input
-    type="text"
-    name="state"
-    value={form.state}
-    onChange={handleChange}
-    placeholder="State / Province"
-  />
-)}
+        <div className="checkout-section">
 
-            <input
-              name="postcode"
-              value={form.postcode}
-              onChange={handleChange}
-              placeholder="Postcode"
-              required
-            />
+          <div className="checkout-section-heading">
 
-            <select
-  name="country"
-  value={form.country}
-  onChange={handleChange}
-  required
->
-  <option value="">
-    Select Country
-  </option>
+            <span className="checkout-step-number">
+              01
+            </span>
 
-  {countries.map(
-    (country: any) => (
-      <option
-        key={country.code}
-        value={country.code}
-      >
-        {country.name}
-      </option>
-    )
-  )}
-</select>
+            <div>
+              <h2>Contact Information</h2>
 
-            {cart?.needs_shipping &&
-                cart?.shipping_rates?.map(
-                    (shippingPackage: any) => (
-                    <div
-                        key={shippingPackage.package_id}
-                        className="mt-6"
-                    >
-                        <h3>
-                        {shippingPackage.name}
-                        </h3>
-
-                        {shippingPackage.shipping_rates?.map(
-                        (rate: any) => (
-                            <label
-                            key={rate.rate_id}
-                            className="block py-2"
-                            >
-                            <input
-                                type="radio"
-                                name={`shipping-${shippingPackage.package_id}`}
-                                checked={
-                                rate.selected === true
-                                }
-                                onChange={async () => {
-                                try {
-                                    const updatedCart =
-                                    await CartService.selectShippingRate(
-                                        shippingPackage.package_id,
-                                        rate.rate_id
-                                    );
-
-                                    setCart(updatedCart);
-                                } catch (error) {
-                                    console.error(
-                                    "Shipping error:",
-                                    error
-                                    );
-                                }
-                                }}
-                            />
-
-                            <span className="ml-2">
-                                {rate.name}
-                            </span>
-                            </label>
-                        )
-                        )}
-                    </div>
-                    )
-                )}
+              <p>
+                We'll use these details to keep you
+                updated about your order.
+              </p>
+            </div>
 
           </div>
 
-          {error && (
-            <p className="mt-4 text-red-600">
-              {error}
-            </p>
-          )}
+
+          <div className="checkout-fields">
+
+            <div className="checkout-field">
+
+              <label htmlFor="first_name">
+                First Name
+                <span>*</span>
+              </label>
+
+              <input
+                id="first_name"
+                name="first_name"
+                value={form.first_name}
+                onChange={handleChange}
+                placeholder="First Name"
+                required
+              />
+
+            </div>
+
+
+            <div className="checkout-field">
+
+              <label htmlFor="last_name">
+                Last Name
+                <span>*</span>
+              </label>
+
+              <input
+                id="last_name"
+                name="last_name"
+                value={form.last_name}
+                onChange={handleChange}
+                placeholder="Last Name"
+                required
+              />
+
+            </div>
+
+
+            <div className="checkout-field">
+
+              <label htmlFor="email">
+                Email Address
+                <span>*</span>
+              </label>
+
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Email Address"
+                required
+              />
+
+            </div>
+
+
+            <div className="checkout-field">
+
+              <label htmlFor="phone">
+                Phone Number
+                <span>*</span>
+              </label>
+
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="Phone Number"
+                required
+              />
+
+            </div>
+
+          </div>
+
         </div>
 
-        <div>
-          <h2 className="text-xl mb-5">
-            Your Order
-          </h2>
 
-          {cart.items.map(
-            (item: any) => (
-              <div
-                key={item.key}
-                className="flex justify-between py-3 border-b"
+        {/* =========================================
+            BILLING / SHIPPING ADDRESS
+        ========================================= */}
+
+        <div className="checkout-section">
+
+          <div className="checkout-section-heading">
+
+            <span className="checkout-step-number">
+              02
+            </span>
+
+            <div>
+              <h2>Billing & Shipping Address</h2>
+
+              <p>
+                Enter the address where your order
+                should be delivered.
+              </p>
+            </div>
+
+          </div>
+
+
+          <div className="checkout-fields">
+
+            {/* COMPANY */}
+
+            <div className="checkout-field checkout-field-full">
+
+              <label htmlFor="company">
+                Company
+                <small>Optional</small>
+              </label>
+
+              <input
+                id="company"
+                name="company"
+                value={form.company}
+                onChange={handleChange}
+                placeholder="Company Name"
+              />
+
+            </div>
+
+
+            {/* ADDRESS */}
+
+            <div className="checkout-field checkout-field-full">
+
+              <label htmlFor="address_1">
+                Street Address
+                <span>*</span>
+              </label>
+
+              <input
+                id="address_1"
+                name="address_1"
+                value={form.address_1}
+                onChange={handleChange}
+                placeholder="House number and street name"
+                required
+              />
+
+            </div>
+
+
+            {/* ADDRESS 2 */}
+
+            <div className="checkout-field checkout-field-full">
+
+              <label htmlFor="address_2">
+                Apartment / Suite
+                <small>Optional</small>
+              </label>
+
+              <input
+                id="address_2"
+                name="address_2"
+                value={form.address_2}
+                onChange={handleChange}
+                placeholder="Apartment, suite, unit, etc."
+              />
+
+            </div>
+
+
+            {/* CITY */}
+
+            <div className="checkout-field">
+
+              <label htmlFor="city">
+                City
+                <span>*</span>
+              </label>
+
+              <input
+                id="city"
+                name="city"
+                value={form.city}
+                onChange={handleChange}
+                placeholder="City"
+                required
+              />
+
+            </div>
+
+
+            {/* POSTCODE */}
+
+            <div className="checkout-field">
+
+              <label htmlFor="postcode">
+                Postcode
+                <span>*</span>
+              </label>
+
+              <input
+                id="postcode"
+                name="postcode"
+                value={form.postcode}
+                onChange={handleChange}
+                placeholder="Postcode"
+                required
+              />
+
+            </div>
+
+
+            {/* COUNTRY */}
+
+            <div className="checkout-field">
+
+              <label htmlFor="country">
+                Country
+                <span>*</span>
+              </label>
+
+              <select
+                id="country"
+                name="country"
+                value={form.country}
+                onChange={handleChange}
+                required
               >
-                <span>
-                  {item.name} ×{" "}
-                  {item.quantity}
+
+                <option value="">
+                  Select Country
+                </option>
+
+                {countries.map(
+                  (country: any) => (
+
+                    <option
+                      key={country.code}
+                      value={country.code}
+                    >
+                      {country.name}
+                    </option>
+
+                  )
+                )}
+
+              </select>
+
+            </div>
+
+
+            {/* STATE */}
+
+            <div className="checkout-field">
+
+              <label htmlFor="state">
+                State / Province
+                <span>*</span>
+              </label>
+
+              {states.length > 0 ? (
+
+                <select
+                  id="state"
+                  name="state"
+                  value={form.state}
+                  onChange={handleChange}
+                  required
+                >
+
+                  <option value="">
+                    Select State / Province
+                  </option>
+
+                  {states.map(
+                    (state: any) => (
+
+                      <option
+                        key={state.code}
+                        value={state.code}
+                      >
+                        {state.name}
+                      </option>
+
+                    )
+                  )}
+
+                </select>
+
+              ) : (
+
+                <input
+                  id="state"
+                  type="text"
+                  name="state"
+                  value={form.state}
+                  onChange={handleChange}
+                  placeholder="State / Province"
+                />
+
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        {/* =========================================
+            SHIPPING METHOD
+        ========================================= */}
+
+        {cart?.needs_shipping &&
+          cart?.shipping_rates?.length > 0 && (
+
+            <div className="checkout-section">
+
+              <div className="checkout-section-heading">
+
+                <span className="checkout-step-number">
+                  03
                 </span>
+
+                <div>
+                  <h2>Shipping Method</h2>
+
+                  <p>
+                    Select your preferred delivery
+                    method.
+                  </p>
+                </div>
+
               </div>
-            )
+
+
+              <div className="checkout-shipping-methods">
+
+                {cart.shipping_rates.map(
+                  (shippingPackage: any) => (
+
+                    <div
+                      key={
+                        shippingPackage.package_id
+                      }
+                      className="shipping-package"
+                    >
+
+                      {shippingPackage.name && (
+
+                        <h3>
+                          {shippingPackage.name}
+                        </h3>
+
+                      )}
+
+
+                      {shippingPackage.shipping_rates?.map(
+                        (rate: any) => (
+
+                          <label
+                            key={rate.rate_id}
+                            className={`checkout-radio-option ${
+                              rate.selected === true
+                                ? "selected"
+                                : ""
+                            }`}
+                          >
+
+                            <input
+                              type="radio"
+                              name={`shipping-${shippingPackage.package_id}`}
+                              checked={
+                                rate.selected === true
+                              }
+                              onChange={async () => {
+
+                                try {
+
+                                  const updatedCart =
+                                    await CartService
+                                      .selectShippingRate(
+                                        shippingPackage.package_id,
+                                        rate.rate_id
+                                      );
+
+                                  setCart(updatedCart);
+
+                                } catch (error) {
+
+                                  console.error(
+                                    "Shipping error:",
+                                    error
+                                  );
+
+                                }
+
+                              }}
+                            />
+
+
+                            <span className="checkout-custom-radio"></span>
+
+
+                            <span className="shipping-rate-name">
+                              {rate.name}
+                            </span>
+
+                          </label>
+
+                        )
+                      )}
+
+                    </div>
+
+                  )
+                )}
+
+              </div>
+
+            </div>
+
           )}
 
-          <div className="flex justify-between">
-            <span>Subtotal</span>
+
+        {/* ERROR */}
+
+        {error && (
+
+          <div className="checkout-error">
+
+            <i className="fa-solid fa-circle-exclamation"></i>
 
             <span>
+              {error}
+            </span>
+
+          </div>
+
+        )}
+
+      </div>
+
+
+      {/* =========================================
+          ORDER SUMMARY
+      ========================================= */}
+
+      <aside
+        className="checkout-order reveal fade-left"
+        style={
+          {
+            "--delay": "120ms",
+          } as React.CSSProperties
+        }
+      >
+
+        <div className="checkout-order-header">
+
+          <h2>Your Order</h2>
+
+          <span>
+            {cart.items.length}
+            {cart.items.length === 1
+              ? " Item"
+              : " Items"}
+          </span>
+
+        </div>
+
+
+        <div className="checkout-order-body">
+
+          {/* PRODUCTS */}
+
+          <div className="checkout-order-products">
+
+            {cart.items.map(
+              (item: any) => (
+
+                <div
+                  key={item.key}
+                  className="checkout-order-product"
+                >
+
+                  <div className="checkout-order-product-info">
+
+                    {(
+                      item.images?.[0]?.thumbnail ||
+                      item.images?.[0]?.src
+                    ) && (
+
+                      <div className="checkout-order-image">
+
+                        <img
+                          src={
+                            item.images?.[0]?.thumbnail ||
+                            item.images?.[0]?.src
+                          }
+                          alt={item.name}
+                        />
+
+                        <span>
+                          {item.quantity}
+                        </span>
+
+                      </div>
+
+                    )}
+
+
+                    <div>
+
+                      <h3>
+                        {item.name}
+                      </h3>
+
+                      <p>
+                        Qty: {item.quantity}
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              )
+            )}
+
+          </div>
+
+
+          {/* TOTALS */}
+
+          <div className="checkout-totals">
+
+            <div className="checkout-total-row">
+
+              <span>Subtotal</span>
+
+              <strong>
                 {currency}
                 {formatPrice(
-                cart?.totals?.total_items
+                  cart?.totals?.total_items
                 )}
-            </span>
+              </strong>
+
             </div>
 
-            <div className="flex justify-between">
-            <span>Shipping</span>
 
-            <span>
+            <div className="checkout-total-row">
+
+              <span>Shipping</span>
+
+              <strong>
                 {currency}
                 {formatPrice(
-                cart?.totals?.total_shipping
+                  cart?.totals?.total_shipping
                 )}
-            </span>
+              </strong>
+
             </div>
 
-            <div className="flex justify-between">
-            <span>Tax</span>
 
-            <span>
+            <div className="checkout-total-row">
+
+              <span>Tax</span>
+
+              <strong>
                 {currency}
                 {formatPrice(
-                cart?.totals?.total_tax
+                  cart?.totals?.total_tax
                 )}
-            </span>
+              </strong>
+
             </div>
 
-            <div className="flex justify-between font-bold">
-            <span>Total</span>
 
-            <span>
+            <div className="checkout-grand-total">
+
+              <span>Total</span>
+
+              <strong>
                 {currency}
                 {formatPrice(
-                cart?.totals?.total_price
+                  cart?.totals?.total_price
                 )}
-            </span>
+              </strong>
+
             </div>
 
-          <div className="mt-8">
-            <h3 className="font-semibold mb-4">
+          </div>
+
+
+          {/* =========================================
+              PAYMENT METHODS
+          ========================================= */}
+
+          <div className="checkout-payment">
+
+            <h3>
               Payment Method
             </h3>
 
+
             {paymentMethods.length === 0 ? (
-              <p>
-                No payment methods
-                available.
+
+              <p className="checkout-no-payment">
+                No payment methods available.
               </p>
+
             ) : (
-              paymentMethods.map(
-                (method: any) => (
-                  <label
-                    key={method.id}
-                    className="block py-3 border-b"
-                  >
-                    <div>
-                      <input
-                        type="radio"
-                        name="payment_method"
-                        value={method.id}
-                        checked={
-                          selectedPaymentMethod ===
-                          method.id
-                        }
-                        onChange={() =>
-                          setSelectedPaymentMethod(
+
+              <div className="checkout-payment-options">
+
+                {paymentMethods.map(
+                  (method: any) => (
+
+                    <label
+                      key={method.id}
+                      className={`checkout-payment-option ${
+                        selectedPaymentMethod ===
+                        method.id
+                          ? "selected"
+                          : ""
+                      }`}
+                    >
+
+                      <div className="checkout-payment-title">
+
+                        <input
+                          type="radio"
+                          name="payment_method"
+                          value={method.id}
+                          checked={
+                            selectedPaymentMethod ===
                             method.id
-                          )
-                        }
-                      />
+                          }
+                          onChange={() =>
+                            setSelectedPaymentMethod(
+                              method.id
+                            )
+                          }
+                        />
 
-                      <span className="ml-2 font-medium">
-                        {method.title}
-                      </span>
-                    </div>
+                        <span className="checkout-custom-radio"></span>
 
-                    {method.description && (
-                      <div
-                        className="ml-6 mt-2 text-sm"
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            method.description,
-                        }}
-                      />
-                    )}
-                  </label>
-                )
-              )
+                        <strong>
+                          {method.title}
+                        </strong>
+
+                      </div>
+
+
+                      {method.description && (
+                        <div
+                          className="checkout-payment-description"
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              method.description,
+                          }}
+                        />
+                      )}
+
+                    </label>
+
+                  )
+                )}
+
+              </div>
+
             )}
+
           </div>
+
+
+          {/* PLACE ORDER */}
 
           <button
             type="submit"
             disabled={
-              placingOrder
+              placingOrder ||
+              paymentMethods.length === 0
             }
-            className="mt-8"
+            className="checkout-place-order"
           >
-            {placingOrder
-              ? "Placing Order..."
-              : "Place Order"}
+
+            {placingOrder ? (
+
+              <>
+                <i className="fa-solid fa-spinner fa-spin"></i>
+                Placing Order...
+              </>
+
+            ) : (
+
+              <>
+                Place Order
+                <i className="fa-solid fa-arrow-right"></i>
+              </>
+
+            )}
+
           </button>
+
+
+          <div className="checkout-security">
+
+            <i className="fa-solid fa-lock"></i>
+
+            <span>
+              Your payment information is secure
+              and encrypted
+            </span>
+
+          </div>
+
         </div>
-      </form>
-    </section>
+
+      </aside>
+
+    </form>
+
+  </div>
+
+</section>
   );
 }

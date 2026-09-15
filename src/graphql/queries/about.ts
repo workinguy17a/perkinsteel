@@ -43,16 +43,6 @@ export const GET_ABOUT_PAGE = `
           }
         }
 
-        achievement {
-          icon {
-                node {
-                sourceUrl
-                altText
-                }
-            }
-          text
-        }
-
         whyChooseTitle
         whyChooseContent
 

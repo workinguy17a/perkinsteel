@@ -1,0 +1,403 @@
+/* =========================================
+   WHO WE ARE
+========================================= */
+
+.who-we-are {
+    width: 100%;
+    overflow: hidden;
+    background: #fff;
+}
+
+.who-we-are-grid {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    align-items: stretch;
+}
+
+
+/* IMAGE */
+
+.who-we-are-image {
+    position: relative;
+    width: 100%;
+    min-height: 540px;
+    overflow: hidden;
+}
+
+.who-we-are-image img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    transition:
+        transform 1s
+        cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* subtle image overlay */
+
+.who-we-are-image::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,0.05),
+            rgba(0,0,0,0)
+        );
+
+    pointer-events: none;
+}
+
+
+/* CONTENT WRAPPER */
+
+.who-we-are-content-wrap {
+    display: flex;
+    align-items: center;
+}
+
+
+/* CONTENT */
+
+.who-we-are-content {
+    width: 100%;
+    max-width: 620px;
+
+    padding:
+        70px 55px;
+}
+
+
+/* SMALL TITLE */
+
+.who-we-are-content h2 {
+    margin: 0 0 12px;
+
+    color: var(--red);
+
+    font-size: 15px;
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+
+
+/* MAIN HEADING */
+
+.who-we-are-content h3 {
+    margin: 0;
+
+    max-width: 520px;
+
+    font-family: play;
+
+    font-size:
+        clamp(
+            38px,
+            4vw,
+            48px
+        );
+
+    font-weight: 600;
+
+    line-height: 1.08;
+
+    text-transform: capitalize;
+}
+
+
+/* BODY */
+
+.who-we-are-content p {
+    margin: 0;
+
+    padding-top: 18px;
+
+    color: #555;
+
+    font-size: 16px;
+
+    line-height: 1.7;
+}
+
+@media (hover: hover) {
+
+    .who-we-are-image:hover img {
+        transform: scale(1.035);
+    }
+
+}
+
+@media (max-width: 1023px) {
+
+    .who-we-are-grid {
+        grid-template-columns: 45% 55%;
+    }
+
+    .who-we-are-image {
+        min-height: 470px;
+    }
+
+    .who-we-are-content {
+        padding:
+            55px 35px;
+    }
+
+    .who-we-are-content h3 {
+        font-size:
+            clamp(
+                34px,
+                4.5vw,
+                42px
+            );
+    }
+
+    .who-we-are-content p {
+        font-size: 15px;
+    }
+
+}
+
+@media (max-width: 767px) {
+
+    .who-we-are-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .who-we-are-image {
+        min-height: auto;
+        height: 340px;
+    }
+
+    .who-we-are-content-wrap {
+        display: block;
+    }
+
+    .who-we-are-content {
+        max-width: none;
+
+        padding:
+            45px 20px;
+    }
+
+    .who-we-are-content h2 {
+        margin-bottom: 10px;
+
+        font-size: 13px;
+    }
+
+    .who-we-are-content h3 {
+        font-size:
+            clamp(
+                30px,
+                8vw,
+                38px
+            );
+    }
+
+    .who-we-are-content p {
+        padding-top: 15px;
+
+        font-size: 14px;
+
+        line-height: 1.65;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .who-we-are-image {
+        height: 290px;
+    }
+
+    .who-we-are-content {
+        padding:
+            38px 16px;
+    }
+
+    .who-we-are-content h3 {
+        font-size: 30px;
+    }
+
+}
+
+/** Industry Section **/
+.industry-section .section-title {
+    margin-bottom: 40px;
+}
+
+.industry-section .section-title p {
+    margin-top: 10px;
+}
+
+/* =========================================
+   ABOUT ACHIEVEMENT STRIP
+========================================= */
+
+.about-achievement {
+    padding: 22px 0;
+    background: var(--red);
+}
+
+.achievement-row {
+    margin: 0;
+}
+
+.achievement-column {
+    position: relative;
+}
+
+
+/* ITEM */
+
+.achievement-box {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 18px;
+
+    min-height: 78px;
+
+    padding: 10px 18px;
+
+    text-align: left;
+}
+
+
+/* ICON */
+
+.achievement-box img {
+    flex-shrink: 0;
+
+    width: 48px;
+    height: 48px;
+
+    object-fit: contain;
+
+    filter: brightness(0) invert(1);
+
+    transition:
+        transform 0.35s
+        cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* TEXT */
+
+.achievement-box p {
+    margin: 0;
+
+    color: var(--white);
+
+    font-size: 17px;
+    font-weight: 600;
+
+    line-height: 1.25;
+}
+
+
+/* NUMBER */
+
+.achievement-box p strong,
+.achievement-box p b {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: var(--white);
+
+    font-family: play;
+
+    font-size: 28px;
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+@media (hover: hover) {
+
+    .achievement-box:hover img {
+        transform:
+            translateY(-2px)
+            scale(1.05);
+    }
+
+}
+
+@media (max-width: 1023px) {
+
+    .about-achievement {
+        padding: 18px 0;
+    }
+
+    .achievement-column {
+        width: 50%;
+    }
+
+    .achievement-box {
+        min-height: 90px;
+    }
+
+}
+
+@media (max-width: 767px) {
+
+    .achievement-box {
+        justify-content: flex-start;
+
+        gap: 14px;
+
+        padding: 14px 12px;
+    }
+
+    .achievement-box img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .achievement-box p {
+        font-size: 14px;
+    }
+
+    .achievement-box p strong,
+    .achievement-box p b {
+        font-size: 24px;
+    }
+
+}
+
+@media (max-width: 420px) {
+
+    .achievement-column {
+        width: 100%;
+    }
+
+    .achievement-box {
+        justify-content: center;
+    }
+
+}
+
+/* About Welcome */
+
+.about-welcome .welcome-content {
+    background: linear-gradient(135deg, #000000e0, #000000c7);
+}
+
+.about-welcome .welcom-title {
+    background: var(--red);
+}

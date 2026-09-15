@@ -44,6 +44,19 @@ export interface Product {
 
   // Related products
   relatedProducts?: Product[];
+    uspImage?: {
+    url: string;
+    alt: string;
+  };
+
+  productUspBar?: {
+    icon: {
+      url: string;
+      alt: string;
+    };
+    title: string;
+    text: string;
+  }[];
 }
 
 export interface ProductImage {

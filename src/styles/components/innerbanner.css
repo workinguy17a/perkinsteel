@@ -1,0 +1,273 @@
+/* =========================================
+   COMMON INNER PAGE BANNER
+========================================= */
+
+section.inner-banner {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+
+    min-height: 320px;
+
+    display: flex;
+    align-items: flex-end;
+
+    padding: 145px 0 42px;
+
+    background-color: var(--black);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+
+/* overlay */
+
+.inner-banner-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.92) 0%,
+            rgba(0, 0, 0, 0.72) 40%,
+            rgba(0, 0, 0, 0.28) 72%,
+            rgba(0, 0, 0, 0.08) 100%
+        );
+
+    pointer-events: none;
+}
+
+
+/* content above overlay */
+
+.inner-banner-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+
+.inner-content-wrap {
+    max-width: 760px;
+}
+
+nav.breadcrumb {
+    margin-bottom: 12px;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+nav.breadcrumb li:last-child span {
+    color: var(--red);
+}
+
+.inner-content-wrap h1 {
+    margin: 0;
+
+    color: var(--red);
+
+    font-family: play;
+
+    font-size:
+        clamp(
+            40px,
+            5vw,
+            54px
+        );
+
+    font-weight: 700;
+
+    line-height: 1.06;
+}
+
+.inner-content-wrap p {
+    max-width: 680px;
+
+    margin-top: 10px;
+
+    color: var(--white);
+
+    font-size: 17px;
+
+    line-height: 1.55;
+}
+
+
+.inner-banner-description h1,.inner-banner-description {
+    color: #fff;
+}
+
+.inner-banner-description h1 span {
+    color: var(--red);
+}
+/* =========================================
+   INNER BANNER ENTRANCE
+========================================= */
+
+.inner-banner-animate {
+    opacity: 0;
+
+    transform: translateY(20px);
+
+    animation:
+        innerBannerReveal
+        0.75s
+        cubic-bezier(0.22, 1, 0.36, 1)
+        forwards;
+}
+
+
+.inner-banner-delay-1 {
+    animation-delay: 0.10s;
+}
+
+
+.inner-banner-delay-2 {
+    animation-delay: 0.20s;
+}
+
+
+.inner-banner-delay-3 {
+    animation-delay: 0.30s;
+}
+
+
+.inner-banner-delay-4 {
+    animation-delay: 0.40s;
+}
+
+
+@keyframes innerBannerReveal {
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+@media (max-width: 1023px) {
+
+    section.inner-banner {
+        min-height: 290px;
+
+        padding:
+            130px 0 38px;
+    }
+
+
+    .inner-content-wrap h1 {
+        font-size:
+            clamp(
+                36px,
+                5.5vw,
+                46px
+            );
+    }
+
+
+    .inner-content-wrap p {
+        font-size: 16px;
+    }
+
+}
+
+@media (max-width: 767px) {
+
+    section.inner-banner {
+        min-height: 260px;
+
+        align-items: flex-end;
+
+        padding:
+            115px 0 32px;
+
+        background-position: center;
+    }
+
+
+    .inner-banner-overlay {
+        background:
+            linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0.94) 0%,
+                rgba(0, 0, 0, 0.78) 62%,
+                rgba(0, 0, 0, 0.42) 100%
+            );
+    }
+
+
+    nav.breadcrumb {
+        margin-bottom: 10px;
+
+        font-size: 12px;
+    }
+
+
+    .inner-content-wrap h1 {
+        font-size:
+            clamp(
+                31px,
+                9vw,
+                38px
+            );
+
+        line-height: 1.08;
+    }
+
+
+    .inner-content-wrap p {
+        margin-top: 9px;
+
+        font-size: 14px;
+
+        line-height: 1.5;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    section.inner-banner {
+        min-height: 235px;
+
+        padding:
+            105px 0 28px;
+    }
+
+
+    .inner-content-wrap h1 {
+        font-size: 30px;
+    }
+
+}
+
+section.inner-banner.product-detail-banner {
+    height: auto;
+
+    min-height: auto;
+
+    padding:
+        150px 0 30px;
+
+    background-color: #000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .inner-banner-animate {
+        opacity: 1 !important;
+
+        transform: none !important;
+
+        animation: none !important;
+    }
+
+}

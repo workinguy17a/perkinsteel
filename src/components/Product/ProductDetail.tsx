@@ -92,405 +92,525 @@ const handleAddToCart =
 
       {/* Product */}
 
-      <section className="w-full pb-12">
-        <div className="max-w-7xl mx-auto px-4">
+      <section className="product-detail-main">
 
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">            
+    <div className="max-w-7xl mx-auto px-4">
 
-            {/* Product Gallery */}
+        <div className="product-detail-grid">
 
-            <div className="flex gap-4">
+            {/* =========================================
+                PRODUCT GALLERY
+            ========================================= */}
 
-            {/* Vertical Thumbnail Slider */}
+            <div className="product-gallery reveal fade-right">
 
-            {gallery.length > 1 && (
-                <div className="flex w-20 shrink-0 flex-col items-center gap-3">
+                {/* MAIN IMAGE */}
+                <div className="product-main-image">
 
-                {/* Thumbnail Previous */}
-
-                <button
-                    type="button"
-                    aria-label="Previous thumbnails"
-                    disabled={thumbnailStart === 0}
-                    onClick={() => {
-                    setThumbnailStart((prev) =>
-                        Math.max(prev - 1, 0)
-                    );
-                    }}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-xl shadow-sm transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-30"
-                >
-                    ↑
-                </button>
+                    <Image
+                        src={selectedImage}
+                        alt={product.name}
+                        width={800}
+                        height={800}
+                        className="product-main-img"
+                        priority
+                    />
 
 
-                {/* Thumbnail Viewport */}
-
-                <div className="flex flex-col gap-3 overflow-hidden">
-
-                    {visibleThumbnails.map((image, index) => {
-                    const actualIndex =
-                        thumbnailStart + index;
-
-                    return (
+                    {/* PREVIOUS IMAGE */}
+                    {gallery.length > 1 && (
                         <button
-                        key={`${image.url}-${actualIndex}`}
-                        type="button"
-                        onClick={() => {
-                            setCurrentImageIndex(actualIndex);
-                            setSelectedImage(image.url);
-                        }}
-                        className={`h-20 w-20 shrink-0 overflow-hidden rounded-lg border-2 bg-white transition ${
-                            currentImageIndex === actualIndex
-                            ? "border-red-600"
-                            : "border-gray-200 hover:border-gray-400"
-                        }`}
+                            type="button"
+                            className="product-gallery-arrow product-gallery-prev"
+                            aria-label="Previous image"
+                            onClick={() => {
+
+                                const newIndex =
+                                    currentImageIndex === 0
+                                        ? gallery.length - 1
+                                        : currentImageIndex - 1;
+
+                                setCurrentImageIndex(newIndex);
+
+                                setSelectedImage(
+                                    gallery[newIndex].url
+                                );
+
+                                if (newIndex < thumbnailStart) {
+                                    setThumbnailStart(newIndex);
+                                }
+
+                                if (
+                                    newIndex >=
+                                    thumbnailStart + thumbnailsPerView
+                                ) {
+                                    setThumbnailStart(
+                                        Math.max(
+                                            newIndex - thumbnailsPerView + 1,
+                                            0
+                                        )
+                                    );
+                                }
+
+                            }}
                         >
-                        <Image
-                            src={image.url}
-                            alt={
-                            image.alt ||
-                            product.name
-                            }
-                            width={80}
-                            height={80}
-                            className="h-full w-full object-contain"
-                        />
+                            <i className="fa-solid fa-chevron-left"></i>
                         </button>
-                    );
-                    })}
+                    )}
+
+
+                    {/* NEXT IMAGE */}
+                    {gallery.length > 1 && (
+                        <button
+                            type="button"
+                            className="product-gallery-arrow product-gallery-next"
+                            aria-label="Next image"
+                            onClick={() => {
+
+                                const newIndex =
+                                    currentImageIndex === gallery.length - 1
+                                        ? 0
+                                        : currentImageIndex + 1;
+
+                                setCurrentImageIndex(newIndex);
+
+                                setSelectedImage(
+                                    gallery[newIndex].url
+                                );
+
+                                if (newIndex < thumbnailStart) {
+                                    setThumbnailStart(newIndex);
+                                }
+
+                                if (
+                                    newIndex >=
+                                    thumbnailStart + thumbnailsPerView
+                                ) {
+                                    setThumbnailStart(
+                                        Math.max(
+                                            newIndex - thumbnailsPerView + 1,
+                                            0
+                                        )
+                                    );
+                                }
+
+                            }}
+                        >
+                            <i className="fa-solid fa-chevron-right"></i>
+                        </button>
+                    )}
 
                 </div>
 
 
-                {/* Thumbnail Next */}
-
-                <button
-                    type="button"
-                    aria-label="Next thumbnails"
-                    disabled={
-                    thumbnailStart + thumbnailsPerView >=
-                    gallery.length
-                    }
-                    onClick={() => {
-                    setThumbnailStart((prev) =>
-                        Math.min(
-                        prev + 1,
-                        gallery.length - thumbnailsPerView
-                        )
-                    );
-                    }}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-xl shadow-sm transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-30"
-                >
-                    ↓
-                </button>
-
-                </div>
-            )}
-
-
-            {/* Main Image */}
-
-            <div className="relative flex min-h-[500px] flex-1 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white p-6">
-
-                <Image
-                src={selectedImage}
-                alt={product.name}
-                width={700}
-                height={700}
-                className="max-h-[500px] w-full object-contain"
-                priority
-                />
-
-
-                {/* Main Image Previous */}
+                {/* =========================================
+                    THUMBNAILS
+                ========================================= */}
 
                 {gallery.length > 1 && (
-                <button
-                    type="button"
-                    aria-label="Previous image"
-                    onClick={() => {
-                    const newIndex =
-                        currentImageIndex === 0
-                        ? gallery.length - 1
-                        : currentImageIndex - 1;
 
-                    setCurrentImageIndex(newIndex);
-                    setSelectedImage(
-                        gallery[newIndex].url
-                    );
+                    <div className="product-thumbnail-slider">
 
-                    // Keep thumbnail slider in sync
-                    if (newIndex < thumbnailStart) {
-                        setThumbnailStart(newIndex);
-                    }
-
-                    if (
-                        newIndex >=
-                        thumbnailStart + thumbnailsPerView
-                    ) {
-                        setThumbnailStart(
-                        newIndex - thumbnailsPerView + 1
-                        );
-                    }
-                    }}
-                    className="absolute left-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-2xl shadow-md transition hover:bg-gray-100"
-                >
-                    ‹
-                </button>
-                )}
+                        {/* PREVIOUS THUMBNAILS */}
+                        <button
+                            type="button"
+                            className="thumbnail-arrow"
+                            aria-label="Previous thumbnails"
+                            disabled={thumbnailStart === 0}
+                            onClick={() => {
+                                setThumbnailStart((prev) =>
+                                    Math.max(prev - 1, 0)
+                                );
+                            }}
+                        >
+                            <i className="fa-solid fa-chevron-left"></i>
+                        </button>
 
 
-                {/* Main Image Next */}
+                        <div className="product-thumbnails">
 
-                {gallery.length > 1 && (
-                <button
-                    type="button"
-                    aria-label="Next image"
-                    onClick={() => {
-                    const newIndex =
-                        currentImageIndex ===
-                        gallery.length - 1
-                        ? 0
-                        : currentImageIndex + 1;
+                            {visibleThumbnails.map((image, index) => {
 
-                    setCurrentImageIndex(newIndex);
-                    setSelectedImage(
-                        gallery[newIndex].url
-                    );
+                                const actualIndex =
+                                    thumbnailStart + index;
 
-                    // Keep thumbnail slider in sync
-                    if (newIndex < thumbnailStart) {
-                        setThumbnailStart(newIndex);
-                    }
+                                return (
 
-                    if (
-                        newIndex >=
-                        thumbnailStart + thumbnailsPerView
-                    ) {
-                        setThumbnailStart(
-                        newIndex - thumbnailsPerView + 1
-                        );
-                    }
-                    }}
-                    className="absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-2xl shadow-md transition hover:bg-gray-100"
-                >
-                    ›
-                </button>
+                                    <button
+                                        key={`${image.url}-${actualIndex}`}
+                                        type="button"
+                                        className={`product-thumbnail ${
+                                            currentImageIndex === actualIndex
+                                                ? "active"
+                                                : ""
+                                        }`}
+                                        onClick={() => {
+
+                                            setCurrentImageIndex(
+                                                actualIndex
+                                            );
+
+                                            setSelectedImage(
+                                                image.url
+                                            );
+
+                                        }}
+                                    >
+
+                                        <Image
+                                            src={image.url}
+                                            alt={
+                                                image.alt ||
+                                                product.name
+                                            }
+                                            width={130}
+                                            height={100}
+                                            className="product-thumbnail-img"
+                                        />
+
+                                    </button>
+
+                                );
+
+                            })}
+
+                        </div>
+
+
+                        {/* NEXT THUMBNAILS */}
+                        <button
+                            type="button"
+                            className="thumbnail-arrow"
+                            aria-label="Next thumbnails"
+                            disabled={
+                                thumbnailStart +
+                                thumbnailsPerView >=
+                                gallery.length
+                            }
+                            onClick={() => {
+
+                                setThumbnailStart((prev) =>
+                                    Math.min(
+                                        prev + 1,
+                                        Math.max(
+                                            gallery.length -
+                                            thumbnailsPerView,
+                                            0
+                                        )
+                                    )
+                                );
+
+                            }}
+                        >
+                            <i className="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                    </div>
+
                 )}
 
             </div>
 
-            </div>
 
-            {/* Product Information */}
+            {/* =========================================
+                PRODUCT INFORMATION
+            ========================================= */}
 
-            <div>
+            <div
+                className="product-detail-info reveal fade-left"
+                style={
+                    {
+                        "--delay": "100ms",
+                    } as React.CSSProperties
+                }
+            >
 
-              {/* SKU */}
-
-              {product.sku && (
-                <div className="mb-2 text-sm text-gray-500">
-                  SKU: {product.sku}
-                </div>
-              )}
-
-              {/* Title */}
-
-              <h1 className="mb-4 text-3xl font-semibold leading-tight lg:text-4xl">
-                {product.name}
-              </h1>
-
-              {/* Rating */}
-
-              <div className="mb-5 flex items-center gap-3">
-
-                <div className="flex">
-                  {Array.from({
-                    length: 5,
-                  }).map((_, index) => (
-                    <span
-                      key={index}
-                      className={
-                        index <
-                        Math.round(
-                          product.rating ?? 0
-                        )
-                          ? "text-yellow-500"
-                          : "text-gray-300"
-                      }
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
-
-                <span className="text-sm text-gray-500">
-                  ({product.reviewCount ?? 0} Reviews)
-                </span>
-
-              </div>
-
-              {/* Price */}
-
-              <div className="mb-6">
-
-                {product.salePrice &&
-                product.regularPrice &&
-                product.salePrice <
-                  product.regularPrice ? (
-                  <div className="flex items-center gap-3">
-
-                    <span className="text-3xl font-bold text-red-600">
-                      {product.currency}
-                      {product.salePrice.toFixed(2)}
-                    </span>
-
-                    <span className="text-lg text-gray-400 line-through">
-                      {product.currency}
-                      {product.regularPrice.toFixed(2)}
-                    </span>
-
-                  </div>
-                ) : (
-                  <span className="text-3xl font-bold">
-                    {product.currency}
-                     {(product.regularPrice ?? product.price).toFixed(2)}
-                  </span>
+                {/* SKU */}
+                {product.sku && (
+                    <div className="product-detail-sku">
+                        SKU : {product.sku}
+                    </div>
                 )}
 
-              </div>
 
-              {/* Short Description */}
+                {/* TITLE */}
+                <h1 className="product-detail-title">
+                    {product.name}
+                </h1>
 
-              {product.shortDescription && (
-                <div
-                  className="mb-6 text-gray-600"
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      product.shortDescription,
-                  }}
-                />
-              )}
 
-              {/* Quantity */}
+                {/* RATING */}
+                <div className="product-detail-rating">
 
-              <div className="mb-4">
+                    <div className="product-rating-stars">
 
-                <label className="mb-2 block text-sm font-medium">
-                  Quantity
-                </label>
+                        {Array.from({
+                            length: 5,
+                        }).map((_, index) => (
 
-                <div className="flex w-fit items-center rounded-lg border border-gray-300">
+                            <span
+                                key={index}
+                                className={
+                                    index <
+                                    Math.round(
+                                        product.rating ?? 0
+                                    )
+                                        ? "active"
+                                        : ""
+                                }
+                            >
+                                ★
+                            </span>
 
-                  <input
-                    type="number"
-                    min="1"
-                    value={quantity}
-                    onChange={(e) => setQuantity(Number(e.target.value))}
-                  />
+                        ))}
+
+                    </div>
+
+                    <span className="product-review-count">
+                        {product.reviewCount ?? 0} Reviews
+                    </span>
 
                 </div>
 
-              </div>
 
-              {/* Add to Cart */}
+                {/* PRICE */}
+                <div className="product-detail-price">
 
-              <div className="flex flex-col gap-3 sm:flex-row">
+                    {product.salePrice &&
+                    product.regularPrice &&
+                    product.salePrice <
+                        product.regularPrice ? (
 
-                <button
-                  type="button"
-                  onClick={handleAddToCart}
-                  disabled={adding} className="rounded-lg bg-red-700 px-8 py-3 font-semibold text-white transition hover:bg-red-800"
-                >
-                  {adding
-                    ? "Adding..."
-                    : added
-                    ? "Added ✓"
-                    : "Add to Cart"}
-                </button>
+                        <>
+                            <span className="product-sale-price">
+                                {product.currency}
+                                {product.salePrice.toFixed(2)}
+                            </span>
 
-                <button
-                  type="button"
-                  className="rounded-lg border border-red-700 px-8 py-3 font-semibold text-red-700 transition hover:bg-red-50"
-                >
-                  Buy Now
-                </button>
+                            <span className="product-regular-price">
+                                {product.currency}
+                                {product.regularPrice.toFixed(2)}
+                            </span>
+                        </>
 
-              </div>
+                    ) : (
 
-              {/* Safe Checkout */}
+                        <span className="product-sale-price">
+                            {product.currency}
+                            {(product.regularPrice ??
+                                product.price
+                            ).toFixed(2)}
+                        </span>
 
-              <div className="mt-6 rounded-lg border border-gray-200 p-4">
+                    )}
 
-                <p className="text-sm font-medium">
-                  Guaranteed Safe Checkout
-                </p>
+                </div>
 
-                <p className="mt-1 text-sm text-gray-500">
-                  Secure payment and safe checkout.
-                </p>
 
-              </div>
+                {/* SHORT DESCRIPTION */}
+                {product.shortDescription && (
+
+                    <div
+                        className="product-short-description"
+                        dangerouslySetInnerHTML={{
+                            __html:
+                                product.shortDescription,
+                        }}
+                    />
+
+                )}
+
+
+                {/* =========================================
+                    PURCHASE AREA
+                ========================================= */}
+
+                <div className="product-purchase-area">
+
+                    <label className="product-quantity-label">
+                        Quantity
+                    </label>
+
+
+                    <div className="product-purchase-row">
+
+                        {/* QUANTITY */}
+                        <div className="product-quantity">
+
+                            <button
+                                type="button"
+                                aria-label="Decrease quantity"
+                                onClick={() =>
+                                    setQuantity((prev) =>
+                                        Math.max(1, prev - 1)
+                                    )
+                                }
+                            >
+                                −
+                            </button>
+
+
+                            <input
+                                type="number"
+                                min="1"
+                                value={quantity}
+                                onChange={(e) =>
+                                    setQuantity(
+                                        Math.max(
+                                            1,
+                                            Number(
+                                                e.target.value
+                                            ) || 1
+                                        )
+                                    )
+                                }
+                            />
+
+
+                            <button
+                                type="button"
+                                aria-label="Increase quantity"
+                                onClick={() =>
+                                    setQuantity(
+                                        (prev) => prev + 1
+                                    )
+                                }
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+
+                        {/* ADD TO CART */}
+                        <button
+                            type="button"
+                            className="product-add-cart"
+                            onClick={handleAddToCart}
+                            disabled={adding}
+                        >
+                            {adding
+                                ? "Adding..."
+                                : added
+                                ? "Added ✓"
+                                : "Add to Cart"
+                            }
+                        </button>
+
+
+                        {/* BUY NOW */}
+                        <button
+                            type="button"
+                            className="product-buy-now"
+                        >
+                            Buy Now
+                        </button>
+
+                    </div>
+
+
+                    {cartError && (
+                        <p className="product-cart-error">
+                            {cartError}
+                        </p>
+                    )}
+
+                </div>
+
+
+                {/* =========================================
+                    SAFE CHECKOUT
+                ========================================= */}
+
+                <div className="product-safe-checkout">
+
+                    <div className="safe-checkout-title">
+
+                        <i className="fa-solid fa-shield-halved"></i>
+
+                        <span>
+                            Guaranteed Safe Checkout
+                        </span>
+
+                    </div>
+
+                    <p>
+                        All data is SSL encrypted &
+                        securely transmitted.
+                    </p>
+
+                </div>
 
             </div>
-
-          </div>
 
         </div>
-      </section>
+
+    </div>
+
+</section>
 
       {/* Product Information Tabs */}
 
-<section className="w-full border-t border-gray-200">
-  <div className="max-w-7xl mx-auto px-4 py-10">
+<section className="product-tabs-section">
 
-    {/* Tab Navigation */}
+  <div className="max-w-7xl mx-auto px-4">
 
-    <div className="flex flex-wrap gap-8 border-b border-gray-200">
+    {/* =========================================
+        TAB NAVIGATION
+    ========================================= */}
+
+    <div
+      className="product-tabs-nav reveal fade-up"
+      role="tablist"
+      aria-label="Product information"
+    >
 
       <button
         type="button"
+        role="tab"
+        aria-selected={activeTab === "description"}
         onClick={() => setActiveTab("description")}
-        className={`pb-4 font-semibold transition ${
-          activeTab === "description"
-            ? "border-b-2 border-red-600 text-red-600"
-            : "text-gray-600 hover:text-red-600"
+        className={`product-tab-btn ${
+          activeTab === "description" ? "active" : ""
         }`}
       >
         Description
       </button>
 
+
       <button
         type="button"
+        role="tab"
+        aria-selected={activeTab === "specifications"}
         onClick={() => setActiveTab("specifications")}
-        className={`pb-4 font-semibold transition ${
-          activeTab === "specifications"
-            ? "border-b-2 border-red-600 text-red-600"
-            : "text-gray-600 hover:text-red-600"
+        className={`product-tab-btn ${
+          activeTab === "specifications" ? "active" : ""
         }`}
       >
         Specifications
       </button>
 
+
       <button
         type="button"
+        role="tab"
+        aria-selected={activeTab === "shipping"}
         onClick={() => setActiveTab("shipping")}
-        className={`pb-4 font-semibold transition ${
-          activeTab === "shipping"
-            ? "border-b-2 border-red-600 text-red-600"
-            : "text-gray-600 hover:text-red-600"
+        className={`product-tab-btn ${
+          activeTab === "shipping" ? "active" : ""
         }`}
       >
         Shipping & Returns
       </button>
 
+
       <button
         type="button"
+        role="tab"
+        aria-selected={activeTab === "reviews"}
         onClick={() => setActiveTab("reviews")}
-        className={`pb-4 font-semibold transition ${
-          activeTab === "reviews"
-            ? "border-b-2 border-red-600 text-red-600"
-            : "text-gray-600 hover:text-red-600"
+        className={`product-tab-btn ${
+          activeTab === "reviews" ? "active" : ""
         }`}
       >
         Reviews
@@ -499,140 +619,320 @@ const handleAddToCart =
     </div>
 
 
-    {/* Tab Content */}
+    {/* =========================================
+        TAB CONTENT
+    ========================================= */}
 
-    <div className="mt-8">
+    <div
+      className="products-tab-details reveal fade-up"
+      style={
+        {
+          "--delay": "100ms",
+        } as React.CSSProperties
+      }
+    >
 
-      {/* Description */}
+      {/* DESCRIPTION */}
 
       {activeTab === "description" && (
-        <div>
+
+        <div
+          key="description"
+          className="product-tab-panel"
+          role="tabpanel"
+        >
+
           {product.description ? (
+
             <div
-              className="prose max-w-none"
+              className="product-description-content"
               dangerouslySetInnerHTML={{
                 __html: product.description,
               }}
             />
+
           ) : (
-            <p className="text-gray-500">
+
+            <p className="product-tab-empty">
               No description available.
             </p>
+
           )}
+
         </div>
+
       )}
 
 
-      {/* Specifications */}
+      {/* SPECIFICATIONS */}
 
       {activeTab === "specifications" && (
-        <div>
+
+        <div
+          key="specifications"
+          className="product-tab-panel"
+          role="tabpanel"
+        >
 
           {product.specifications &&
           product.specifications.length > 0 ? (
-            <div className="space-y-3">
+
+            <div className="product-specifications">
 
               {product.specifications.map(
                 (spec, index) => (
+
                   <div
                     key={index}
-                    className="flex flex-col border-b border-gray-200 py-3 sm:flex-row"
+                    className="product-spec-row"
                   >
-                    <div className="w-full font-medium sm:w-1/3">
+
+                    <div className="product-spec-label">
                       {spec.label}
                     </div>
 
-                    <div className="w-full text-gray-600 sm:w-2/3">
+                    <div className="product-spec-value">
                       {spec.value}
                     </div>
+
                   </div>
+
                 )
               )}
 
             </div>
+
           ) : (
-            <p className="text-gray-500">
+
+            <p className="product-tab-empty">
               No specifications available.
             </p>
+
           )}
 
         </div>
+
       )}
 
 
-      {/* Shipping & Returns */}
+      {/* SHIPPING */}
 
       {activeTab === "shipping" && (
-        <div className="prose max-w-none">
 
-          <h3>Shipping</h3>
+        <div
+          key="shipping"
+          className="product-tab-panel product-shipping-content"
+          role="tabpanel"
+        >
 
-          <p>
-            Shipping information will be displayed here.
-          </p>
+          <div className="product-info-block">
 
-          <h3>Returns</h3>
+            <h3>Shipping</h3>
 
-          <p>
-            Returns and refund information will be
-            displayed here.
-          </p>
+            <p>
+              Shipping information will be displayed here.
+            </p>
+
+          </div>
+
+
+          <div className="product-info-block">
+
+            <h3>Returns</h3>
+
+            <p>
+              Returns and refund information will be
+              displayed here.
+            </p>
+
+          </div>
 
         </div>
+
       )}
 
 
-      {/* Reviews */}
+      {/* REVIEWS */}
 
       {activeTab === "reviews" && (
-        <div>
 
-          <div className="mb-6 flex items-center gap-4">
+        <div
+          key="reviews"
+          className="product-tab-panel"
+          role="tabpanel"
+        >
 
-            <div className="text-3xl font-bold">
+          <div className="product-review-summary">
+
+            <div className="product-review-score">
               {product.rating?.toFixed(1) ?? "0.0"}
             </div>
 
-            <div>
-              <div className="flex text-yellow-500">
-                {Array.from({ length: 5 }).map(
-                  (_, index) => (
-                    <span key={index}>
-                      {index <
-                      Math.round(
-                        product.rating ?? 0
-                      )
-                        ? "★"
-                        : "☆"}
-                    </span>
-                  )
-                )}
+
+            <div className="product-review-info">
+
+              <div className="product-review-stars">
+
+                {Array.from({
+                  length: 5,
+                }).map((_, index) => (
+
+                  <span key={index}>
+                    {index <
+                    Math.round(
+                      product.rating ?? 0
+                    )
+                      ? "★"
+                      : "☆"}
+                  </span>
+
+                ))}
+
               </div>
 
-              <p className="text-sm text-gray-500">
+              <p>
                 {product.reviewCount ?? 0} reviews
               </p>
+
             </div>
 
           </div>
 
-          <p className="text-gray-500">
+
+          <p className="product-tab-empty">
             Customer reviews will be displayed here.
           </p>
 
         </div>
+
       )}
 
     </div>
 
   </div>
+
 </section>
 
-      {/* Related Products */}
+
+{/* Related Products */}
 
 <RelatedProducts
   products={product.relatedProducts ?? []}
 />
+
+
+{(
+  product.productUspBar?.length ||
+  product.uspImage?.url
+) && (
+
+  <section className="product-usp-section">
+
+    <div className="mx-auto max-w-7xl px-4">
+
+      <div className="product-usp-wrap">
+
+        {/* =========================================
+            USP LIST
+        ========================================= */}
+
+        {product.productUspBar &&
+          product.productUspBar.length > 0 && (
+
+            <div className="product-usp-content reveal fade-right">
+
+              {product.productUspBar.map(
+                (item, index) => (
+
+                  <div
+                    key={index}
+                    className="product-usp-item"
+                  >
+
+                    {item.icon.url && (
+
+                      <div className="product-usp-icon">
+
+                        <Image
+                          src={item.icon.url}
+                          alt={
+                            item.icon.alt ||
+                            item.title
+                          }
+                          fill
+                          className="product-usp-icon-img"
+                        />
+
+                      </div>
+
+                    )}
+
+
+                    <div className="product-usp-text">
+
+                      <h3>
+                        {item.title}
+                      </h3>
+
+                      {item.text && (
+                        <p>
+                          {item.text}
+                        </p>
+                      )}
+
+                    </div>
+
+                  </div>
+
+                )
+              )}
+
+            </div>
+
+          )}
+
+
+        {/* =========================================
+            USP IMAGE
+        ========================================= */}
+
+        {product.uspImage?.url && (
+
+          <div
+            className="product-usp-image reveal fade-left"
+            style={
+              {
+                "--delay": "100ms",
+              } as React.CSSProperties
+            }
+          >
+
+            <Image
+              src={product.uspImage.url}
+              alt={
+                product.uspImage.alt ||
+                product.name
+              }
+              fill
+              sizes="
+                (max-width: 767px) 100vw,
+                (max-width: 1023px) 50vw,
+                50vw
+              "
+              className="product-usp-main-img"
+            />
+
+          </div>
+
+        )}
+
+      </div>
+
+    </div>
+
+  </section>
+
+)}
     </main>
   );
 }

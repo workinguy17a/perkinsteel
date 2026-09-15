@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import CartService from "@/services/cart.service";
 
+
 export default function CartPage() {
   const [cart, setCart] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -103,43 +104,130 @@ export default function CartPage() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-3xl mb-10">
-        Shopping Cart
-      </h1>
+    <section className="cart-page">
 
-      <div className="grid lg:grid-cols-3 gap-10">
+  <div className="max-w-7xl mx-auto px-4">
 
-        <div className="lg:col-span-2">
-          {cart.items.map((item: any) => (
-            <div
-              key={item.key}
-              className="flex gap-6 py-6 border-b"
-            >
-              <img
-                src={
-                  item.images?.[0]?.thumbnail ||
-                  item.images?.[0]?.src
-                }
-                alt={item.name}
-                className="w-28 h-28 object-cover"
-              />
+    {/* =========================================
+        PAGE HEADER
+    ========================================= */}
 
-              <div className="flex-1">
-                <h3 className="text-lg">
-                  {item.name}
-                </h3>
+    <div className="cart-page-header reveal fade-up">
 
-                <p className="mt-2">
+      <div>
+        <span className="cart-page-eyebrow">
+          YOUR CART
+        </span>
+
+        <h1>Shopping Cart</h1>
+      </div>
+
+      <div className="cart-item-count">
+        {cart.items.length}
+        {cart.items.length === 1 ? " Item" : " Items"}
+      </div>
+
+    </div>
+
+
+    {/* =========================================
+        CART LAYOUT
+    ========================================= */}
+
+    <div className="cart-layout">
+
+      {/* =========================================
+          CART PRODUCTS
+      ========================================= */}
+
+      <div className="cart-products reveal fade-right">
+
+        {/* TABLE HEADER */}
+
+        <div className="cart-table-header">
+
+          <div>Product</div>
+
+          <div>Price</div>
+
+          <div>Quantity</div>
+
+          <div>Total</div>
+
+          <div></div>
+
+        </div>
+
+
+        {/* CART ITEMS */}
+
+        <div className="cart-items">
+
+          {cart.items.map((item: any) => {
+
+            const price =
+              item.prices?.price ?? 0;
+
+            const lineTotal =
+              price * item.quantity;
+
+            return (
+
+              <div
+                key={item.key}
+                className="cart-item"
+              >
+
+                {/* PRODUCT */}
+
+                <div className="cart-product">
+
+                  <div className="cart-product-image">
+
+                    <img
+                      src={
+                        item.images?.[0]?.thumbnail ||
+                        item.images?.[0]?.src
+                      }
+                      alt={item.name}
+                    />
+
+                  </div>
+
+
+                  <div className="cart-product-info">
+
+                    <h3>
+                      {item.name}
+                    </h3>
+
+                    {/* MOBILE PRICE */}
+
+                    <div className="cart-mobile-price">
+                      {currency}
+                      {formatPrice(price)}
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                {/* PRICE */}
+
+                <div className="cart-item-price">
                   {currency}
-                  {formatPrice(
-                    item.prices?.price ?? 0
-                  )}
-                </p>
+                  {formatPrice(price)}
+                </div>
 
-                <div className="flex items-center gap-3 mt-4">
+
+                {/* QUANTITY */}
+
+                <div className="cart-quantity">
+
                   <button
                     type="button"
+                    aria-label="Decrease quantity"
                     disabled={
                       updating === item.key
                     }
@@ -153,12 +241,15 @@ export default function CartPage() {
                     −
                   </button>
 
+
                   <span>
                     {item.quantity}
                   </span>
 
+
                   <button
                     type="button"
+                    aria-label="Increase quantity"
                     disabled={
                       updating === item.key
                     }
@@ -172,60 +263,160 @@ export default function CartPage() {
                     +
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      removeItem(item.key)
-                    }
-                    disabled={
-                      updating === item.key
-                    }
-                    className="ml-5"
-                  >
-                    Remove
-                  </button>
                 </div>
+
+
+                {/* LINE TOTAL */}
+
+                <div className="cart-line-total">
+                  {currency}
+                  {formatPrice(lineTotal)}
+                </div>
+
+
+                {/* REMOVE */}
+
+                <button
+                  type="button"
+                  className="cart-remove"
+                  aria-label={`Remove ${item.name}`}
+                  onClick={() =>
+                    removeItem(item.key)
+                  }
+                  disabled={
+                    updating === item.key
+                  }
+                >
+                  <i className="fa-solid fa-trash-can"></i>
+                </button>
+
               </div>
-            </div>
-          ))}
+
+            );
+
+          })}
+
         </div>
 
-        <div>
-          <h2 className="text-xl mb-5">
-            Cart Totals
-          </h2>
 
-          <div className="flex justify-between mb-3">
+        {/* CONTINUE SHOPPING */}
+
+        <div className="cart-products-footer">
+
+          <Link
+            href="/shop"
+            className="continue-shopping"
+          >
+            <i className="fa-solid fa-arrow-left"></i>
+
+            Continue Shopping
+          </Link>
+
+        </div>
+
+      </div>
+
+
+      {/* =========================================
+          ORDER SUMMARY
+      ========================================= */}
+
+      <aside
+        className="cart-summary reveal fade-left"
+        style={
+          {
+            "--delay": "100ms",
+          } as React.CSSProperties
+        }
+      >
+
+        <div className="cart-summary-header">
+          <h2>Cart Totals</h2>
+        </div>
+
+
+        <div className="cart-summary-body">
+
+          {/* SUBTOTAL */}
+
+          <div className="cart-summary-row">
+
             <span>Subtotal</span>
 
-            <span>
+            <strong>
               {currency}
               {formatPrice(
                 cart.totals?.total_items ?? 0
               )}
-            </span>
+            </strong>
+
           </div>
 
-          <div className="flex justify-between font-bold text-lg">
+
+          {/* SHIPPING */}
+
+          <div className="cart-summary-row">
+
+            <span>Shipping</span>
+
+            <span className="cart-shipping-text">
+              Calculated at checkout
+            </span>
+
+          </div>
+
+
+          <div className="cart-summary-divider"></div>
+
+
+          {/* TOTAL */}
+
+          <div className="cart-summary-total">
+
             <span>Total</span>
 
-            <span>
+            <strong>
               {currency}
               {formatPrice(
                 cart.totals?.total_price ?? 0
               )}
-            </span>
+            </strong>
+
           </div>
+
+
+          {/* CHECKOUT */}
 
           <Link
             href="/checkout"
-            className="block text-center mt-8"
+            className="cart-checkout-btn"
           >
             Proceed to Checkout
+
+            <i className="fa-solid fa-arrow-right"></i>
           </Link>
+
+
+          {/* SECURE CHECKOUT */}
+
+          <div className="cart-secure-checkout">
+
+            <i className="fa-solid fa-lock"></i>
+
+            <span>
+              Secure & encrypted checkout
+            </span>
+
+          </div>
+
         </div>
 
-      </div>
-    </section>
+      </aside>
+
+    </div>
+
+  </div>
+
+</section>
   );
 }

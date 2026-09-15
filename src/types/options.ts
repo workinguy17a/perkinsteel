@@ -1,3 +1,12 @@
+export interface GlobalImage {
+  url: string;
+  alt: string;
+}
+export interface GlobalAchievement {
+    image: GlobalImage;
+    text: string;
+  }
+
 export interface GlobalOptions {
   logo: {
     url: string;
@@ -19,4 +28,7 @@ export interface GlobalOptions {
     icon: string;
     text: string;
   }[];
+
+  achievement: GlobalAchievement[];
+  
 }

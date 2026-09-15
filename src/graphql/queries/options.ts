@@ -24,6 +24,16 @@ export const GET_GLOBAL_OPTIONS = `
           uspIcon
           uspText
         }
+
+        achievements {
+          icon {
+                node {
+                sourceUrl
+                altText
+                }
+            }
+          text
+        }
       }
     }
   }

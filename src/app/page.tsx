@@ -7,7 +7,7 @@ import Testimonials from "@/components/ClientTestimonials/ClientTestimonials";
 import ProductService from "@/services/product.service";
 import HomepageService from "@/services/homepage.service";
 import FeaturedProducts from "@/components/FeaturedProducts/FeaturedProducts";
-import UspBar from "@/components/UspBar/UspBar";
+import UspBar from "@/components/Global/UspBar";
 import KitchenwareCategorySlider
 from "@/components/Sliders/Kwslider";
 import HospitalityCategories

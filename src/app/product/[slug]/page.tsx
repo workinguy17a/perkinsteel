@@ -4,6 +4,7 @@ import ProductService from "@/services/product.service";
 
 import ProductDetail from "@/components/Product/ProductDetail";
 import InnerBanner from "@/components/Common/InnerBanner";
+import UspBar from "@/components/Global/UspBar";
 
 interface Props {
   params: Promise<{
@@ -44,7 +45,10 @@ export default async function ProductPage({
           },
         ]}
       />
+      <UspBar />
     <ProductDetail product={product} />
+    
+    
     </>
   );
 }

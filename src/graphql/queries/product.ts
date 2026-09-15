@@ -34,6 +34,27 @@ query GetProductBySlug($slug: ID!) {
       }
     }
 
+    acfproduct {
+      uspImage {
+        node {
+          sourceUrl
+          altText
+        }
+      }
+
+      productUspBar {
+        uspIcon {
+          node {
+            sourceUrl
+            altText
+          }
+        }
+
+        uspTitle
+        uspText
+      }
+    }
+
     related {
   nodes {
     __typename
@@ -76,4 +97,19 @@ query GetProductBySlug($slug: ID!) {
     }
   }
 }
+`;
+
+export const GET_SHOP_PAGE = `
+  query GetShopPage($id: ID!) {
+    page(id: $id, idType: DATABASE_ID) {
+      title
+      content
+      featuredImage {
+        node {
+          sourceUrl
+          altText
+        }
+      }
+    }
+  }
 `;

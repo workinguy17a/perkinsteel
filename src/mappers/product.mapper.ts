@@ -73,5 +73,30 @@ export function mapProduct(node: any): Product {
 
     relatedProducts:
       node.related?.nodes?.map(mapProduct) ?? [],
+
+    uspImage: node.acfproduct?.uspImage?.node
+      ? {
+          url:
+            node.acfproduct.uspImage.node.sourceUrl ?? "",
+          alt:
+            node.acfproduct.uspImage.node.altText ?? "",
+        }
+      : undefined,
+
+      productUspBar:
+        node.acfproduct?.productUspBar?.map(
+          (item: any) => ({
+            icon: {
+              url:
+                item.uspIcon?.node?.sourceUrl ?? "",
+              alt:
+                item.uspIcon?.node?.altText ?? "",
+            },
+            title:
+              item.uspTitle ?? "",
+            text:
+              item.uspText ?? "",
+          })
+        ) ?? [],
   };
 }

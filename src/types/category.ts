@@ -19,6 +19,20 @@ export interface Category {
   parentSlug?: string | null;
 
   children?: Category[];
+  shortTitle?: string;
+  categoryContent?: string;
+
+  categoryFaq?: {
+    question: string;
+    answer: string;
+  }[];
+  faqTitle:string;
+  faqSubText:string;
+  faqCta?:{
+    title: string;
+    url: string;
+    target?: string;
+  };
 }
 
 export interface ChildCategory {

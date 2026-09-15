@@ -24,6 +24,7 @@ export default function CategoryContent({
     category,
   categories,
 }: Props)  {
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("latest");
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,44 +86,80 @@ console.log(products.map(p => p.price));
     <section className="cat-pro-section w-full">
       <div className="max-w-7xl mx-auto px-4">
 
-        <div className="flex flex-wrap -mx-0.5">
-            <div className="w-full lg:w-3/12 px-0.5">
-                <aside className="col-span-3">
-                    <CategorySidebar
-                      categories={categories}
-                      activeSlug={category.slug}
-                      minPrice={minPrice}
-                      maxPrice={maxPrice}
-                      selectedPrice={selectedPrice}
-                      onPriceChange={setSelectedPrice}
-                      currency={products[0]?.currency ?? "£"}
-                    />
-                </aside>
+          <div className="flex flex-wrap category-shop-layout">
+
+              {/* Sidebar */}
+              <div className="w-full lg:w-3/12 category-sidebar-column">
+                <button
+                    type="button"
+                    className={`mobile-filter-toggle ${
+                        mobileFiltersOpen ? "is-open" : ""
+                    }`}
+                    onClick={() => setMobileFiltersOpen((prev) => !prev)}
+                    aria-expanded={mobileFiltersOpen}
+                    aria-controls="category-filter-panel"
+                >
+                    <span>
+                        <i className="fa-solid fa-sliders"></i>
+                        Filters
+                    </span>
+
+                    <i className="fa-solid fa-chevron-down filter-toggle-arrow"></i>
+                </button>
+
+
+                <div
+                    id="category-filter-panel"
+                    className={`category-sidebar-responsive ${
+                        mobileFiltersOpen ? "is-open" : ""
+                    }`}
+                >
+                    <aside className="category-sidebar">
+                        <CategorySidebar
+                            categories={categories}
+                            activeSlug={category.slug}
+                            minPrice={minPrice}
+                            maxPrice={maxPrice}
+                            selectedPrice={selectedPrice}
+                            onPriceChange={setSelectedPrice}
+                            currency={products[0]?.currency ?? "£"}
+                        />
+                    </aside>
+                </div>
+
             </div>
 
-          {/* Products */}
-          <div className="w-full lg:w-9/12 px-0.5">
-            <div className="pro-list">
-                <ProductToolbar
-                  totalProducts={sortedProducts.length}
-                  sortBy={sortBy}
-                  onSortChange={setSortBy}
-                />
-              <ProductGrid
-                products={paginatedProducts}
-                view={view}
-              />
+              {/* Products */}
+              <div className="w-full lg:w-9/12 category-products-column">
+                  <div
+                      className="pro-list reveal fade-up"
+                      style={{
+                          "--delay": "100ms",
+                      } as React.CSSProperties}
+                  >
+                      <ProductToolbar
+                          totalProducts={sortedProducts.length}
+                          sortBy={sortBy}
+                          onSortChange={setSortBy}
+                      />
 
-              <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-            </div>
+                      <ProductGrid
+                          products={paginatedProducts}
+                          view={view}
+                      />
+
+                      <Pagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          onPageChange={setCurrentPage}
+                      />
+                  </div>
+              </div>
+
           </div>
-        </div>
 
-      </div>
-    </section>
+      </div>      
+  </section>
+  
   );
 }

@@ -13,45 +13,62 @@ export default function InnerBanner({
 }: InnerBannerProps) {
 
   return (
-<section
-  className={`inner-banner w-full ${className ?? ""}`}
-  style={{
-    backgroundImage: image
-          ? `url(${image})`
-          : undefined,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-  }}
->
+  <section
+      className={`inner-banner w-full ${className ?? ""}`}
+      style={{
+          backgroundImage: image
+              ? `url(${image})`
+              : undefined,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+      }}
+  >
 
-        <div className="max-w-7xl mx-auto px-4">
+      <div className="inner-banner-overlay"></div>
 
-            <div className="flex flex-wrap">
+      <div className="max-w-7xl mx-auto px-4 inner-banner-container">
 
-                <div className="w-full lg:w-8/12">
+          <div className="flex flex-wrap">
 
-                    <div className="inner-content-wrap">
+              <div className="w-full lg:w-8/12">
 
-                        {/* Breadcrumb */}
+                  <div className="inner-content-wrap">
 
-                        <Breadcrumb items={breadcrumbs} />
-                         {title && <h1>{title}</h1>}
-                        {description && (
-                                <p>{description}</p>
-                            )}
+                      <div className="inner-banner-animate inner-banner-delay-1">
+                          <Breadcrumb items={breadcrumbs} />
+                      </div>
 
-                    </div>
+                      {title && (
+                          <h1 className="inner-banner-animate inner-banner-delay-2">
+                              {title}
+                          </h1>
+                      )}
 
-                    {actions && actions.length > 0 && (
-                    <BannerActions actions={actions} />
-                    )}  
+                      {description && (
+                          <div
+                        className="inner-banner-description inner-banner-animate inner-banner-delay-3"
+                        dangerouslySetInnerHTML={{
+                        __html: description,
+                        }}
+                    />
+                    )}
 
-                </div>
+                      
 
-            </div>
+                  </div>
 
-        </div>
+                  {actions && actions.length > 0 && (
+                      <div className="inner-banner-animate inner-banner-delay-4">
+                          <BannerActions actions={actions} />
+                      </div>
+                  )}
 
-    </section>
+              </div>
+
+          </div>
+
+      </div>
+
+  </section>
      );
 }

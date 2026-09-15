@@ -12,6 +12,20 @@ query GetCategoryProducts($slug: ID!, $first: Int = 500) {
           altText
         }
       }
+
+      categoryContent
+
+      categoryFaq {
+        catQuestion
+        catAnswer
+      }
+      faqTitle
+      faqSubText
+      faqCta{
+          title
+          url
+          target
+        }
     }
     products(first: $first) {
       nodes {
@@ -35,6 +49,8 @@ query GetCategoryProducts($slug: ID!, $first: Int = 500) {
             slug
           }
         }
+
+        
 
         ... on ProductWithPricing {
           price
@@ -65,7 +81,8 @@ export const GET_MAIN_PRODUCT_CATEGORIES = `
         image {
           sourceUrl
           altText
-        }
+        }       
+        
       }
     }
   }
