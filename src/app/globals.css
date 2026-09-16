@@ -101,3 +101,14 @@ body {
         transition: none !important;
     }
 }
+
+/* TEMPORARY MOBILE TEST */
+@media (max-width: 767px) {
+
+    .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+}
