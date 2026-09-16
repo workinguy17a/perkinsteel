@@ -45,6 +45,8 @@ export async function POST(request: Request) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-Perkins-Secret":
+           process.env.PERKINS_HEADLESS_SECRET!,
         },
         body: JSON.stringify({
           login,

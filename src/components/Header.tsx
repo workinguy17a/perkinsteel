@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getMenu } from "@/lib/getMenu";
 import CartIcon from "./Header/CartIcon";
+import AccountIcon from "./Header/AccountIcon";
 import HeaderClient from "./Header/HeaderClient";
 import "./Header/header.css";
 
@@ -80,9 +81,7 @@ export default async function Header() {
                         <i className="fas fa-search"></i>
                     </button>
 
-                    <a href="#" aria-label="Account">
-                        <i className="far fa-user"></i>
-                    </a>
+                    <AccountIcon />
 
                     <div className="side-cart">
                         <CartIcon />
