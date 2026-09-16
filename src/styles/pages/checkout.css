@@ -9,10 +9,7 @@
      Your header is fixed.
      Adjust --header-height to your actual header height.
     */
-    padding:
-        calc(var(--header-height, 85px) + 35px)
-        0
-        75px;
+    padding:55px 0 75px;
 
     background: #fff;
 }

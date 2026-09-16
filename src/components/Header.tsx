@@ -119,9 +119,7 @@ export default async function Header() {
                         <i className="fas fa-search"></i>
                     </button>
 
-                    <a href="#" aria-label="Account">
-                        <i className="far fa-user"></i>
-                    </a>
+                    <AccountIcon />
 
                     <div className="mobile-cart">
                         <CartIcon />

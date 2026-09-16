@@ -8,6 +8,7 @@ import {
 
 import CartService from "@/services/cart.service";
 import { useRouter } from "next/navigation";
+import InnerBanner from "@/components/Common/InnerBanner/InnerBanner";
 
 export default function CheckoutPage() {
 
@@ -466,17 +467,48 @@ useEffect(() => {
 
   if (loading) {
     return (
+      <>
+      <InnerBanner
+        title="Checkout"
+        breadcrumbs={[
+          {
+            label: "Home",
+            href: "/",
+          },
+          {
+            label:
+              "Checkout",
+          },
+        ]}
+      />
+      
       <div className="max-w-7xl mx-auto px-4 py-20">
         Loading checkout...
       </div>
+      </>
     );
   }
 
   if (!cart?.items?.length) {
     return (
+      <>
+      <InnerBanner
+        title="Checkout"
+        breadcrumbs={[
+          {
+            label: "Home",
+            href: "/",
+          },
+          {
+            label:
+              "Checkout",
+          },
+        ]}
+      />
       <div className="max-w-7xl mx-auto px-4 py-20">
         Your cart is empty.
       </div>
+      </>
     );
   }
 
@@ -496,6 +528,20 @@ const formatPrice = (
 };
 
   return (
+    <>
+      <InnerBanner
+        title="Checkout"
+        breadcrumbs={[
+          {
+            label: "Home",
+            href: "/",
+          },
+          {
+            label:
+              "Checkout",
+          },
+        ]}
+      />
     <section className="checkout-page">
 
   <div className="max-w-7xl mx-auto px-4">
@@ -1277,5 +1323,6 @@ const formatPrice = (
   </div>
 
 </section>
+</>
   );
 }

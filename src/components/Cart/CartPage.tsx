@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import CartService from "@/services/cart.service";
-
+import InnerBanner from "@/components/Common/InnerBanner/InnerBanner";
 
 export default function CartPage() {
   const [cart, setCart] = useState<any>(null);
@@ -68,14 +68,43 @@ export default function CartPage() {
 
   if (loading) {
     return (
+      <>
+      <InnerBanner
+        title="Cart"
+        breadcrumbs={[
+          {
+            label: "Home",
+            href: "/",
+          },
+          {
+            label:
+              "Cart",
+          },
+        ]}
+      />
       <div className="max-w-7xl mx-auto px-4 py-20">
         Loading cart...
       </div>
+      </>
     );
   }
 
   if (!cart?.items?.length) {
     return (
+      <>
+      <InnerBanner
+        title="Cart"
+        breadcrumbs={[
+          {
+            label: "Home",
+            href: "/",
+          },
+          {
+            label:
+              "Cart",
+          },
+        ]}
+      />
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <h1 className="text-3xl mb-6">
           Your cart is empty
@@ -85,6 +114,7 @@ export default function CartPage() {
           Continue Shopping
         </Link>
       </div>
+      </>
     );
   }
 
@@ -104,6 +134,20 @@ export default function CartPage() {
   };
 
   return (
+    <>
+    <InnerBanner
+        title="Cart"
+        breadcrumbs={[
+          {
+            label: "Home",
+            href: "/",
+          },
+          {
+            label:
+              "Cart",
+          },
+        ]}
+      />
     <section className="cart-page">
 
   <div className="max-w-7xl mx-auto px-4">
@@ -418,5 +462,6 @@ export default function CartPage() {
   </div>
 
 </section>
+</>
   );
 }
