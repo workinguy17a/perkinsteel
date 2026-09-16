@@ -105,10 +105,10 @@ body {
 /* TEMPORARY MOBILE TEST */
 @media (max-width: 767px) {
 
-    .reveal {
-        opacity: 1 !important;
-        transform: none !important;
-        transition: none !important;
+    html,
+    body,
+    main {
+        background: #fff !important;
     }
 
 }
