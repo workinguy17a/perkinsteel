@@ -1,9 +1,9 @@
 import { graphqlFetch } from "@/graphql/fetcher";
-import { GET_PRODUCTS } from "@/graphql/queries/products";
+import { GET_PRODUCTS,GET_BEST_SELLING_PRODUCTS,SEARCH_PRODUCTS, } from "@/graphql/queries/products";
 import { GET_PRODUCT_BY_SLUG, GET_SHOP_PAGE, } from "@/graphql/queries/product";
 import { GET_CATEGORY_PRODUCTS } from "@/graphql/queries/category-products";
 import { GET_MAIN_PRODUCT_CATEGORIES,} from "@/graphql/queries/category-products";
-import {GET_BEST_SELLING_PRODUCTS,} from "@/graphql/queries/products";
+//import {GET_BEST_SELLING_PRODUCTS} from "@/graphql/queries/products";
 import { mapProduct } from "@/mappers/product.mapper";
 import { Product } from "@/types/product";
 import { GET_CATEGORY_CHILDREN } from "@/graphql/queries/category-children";
@@ -19,28 +19,28 @@ class ProductService {
   }
 
   async getLatestProducts(first = 8): Promise<Product[]> {
-  const data: any = await graphqlFetch(
-    GET_PRODUCTS,
-    { first }
-  );
+    const data: any = await graphqlFetch(
+      GET_PRODUCTS,
+      { first }
+    );
 
-  return data.products.nodes.map(mapProduct);
-}
+    return data.products.nodes.map(mapProduct);
+  }
 
-async getRandomProducts(
-  count = 8,
-  excludeIds: number[] = []
-): Promise<Product[]> {
-  const products = await this.getProducts();
+  async getRandomProducts(
+    count = 8,
+    excludeIds: number[] = []
+  ): Promise<Product[]> {
+    const products = await this.getProducts();
 
-  const availableProducts = products.filter(
-    (product) => !excludeIds.includes(product.id)
-  );
+    const availableProducts = products.filter(
+      (product) => !excludeIds.includes(product.id)
+    );
 
-  return [...availableProducts]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, count);
-}
+    return [...availableProducts]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, count);
+  }
 
   async getProductsByCategory(
     slug: string,
@@ -59,62 +59,62 @@ async getRandomProducts(
     }
 
     const acf =
-  data.productCategory.acfProductCategory;
+      data.productCategory.acfProductCategory;
 
-    return {
-  category: {
-    id: data.productCategory.databaseId,
-    name: data.productCategory.name,
-    slug: data.productCategory.slug,
-    description:
-      data.productCategory.description ?? "",
+        return {
+      category: {
+        id: data.productCategory.databaseId,
+        name: data.productCategory.name,
+        slug: data.productCategory.slug,
+        description:
+          data.productCategory.description ?? "",
 
-    bannerImage:
-      acf?.categoryBanner
-        ?.node
-        ?.sourceUrl ?? "",
+        bannerImage:
+          acf?.categoryBanner
+            ?.node
+            ?.sourceUrl ?? "",
 
-    shortTitle:
-      acf?.shortTitle ?? "",
+        shortTitle:
+          acf?.shortTitle ?? "",
 
-    categoryContent:
-      acf?.categoryContent ?? "",
+        categoryContent:
+          acf?.categoryContent ?? "",
 
-    categoryFaq:
-      acf?.categoryFaq?.map(
-        (item: any) => ({
-          question:
-            item.catQuestion ?? "",
-          answer:
-            item.catAnswer ?? "",
-        })
-      ) ?? [],
+        categoryFaq:
+          acf?.categoryFaq?.map(
+            (item: any) => ({
+              question:
+                item.catQuestion ?? "",
+              answer:
+                item.catAnswer ?? "",
+            })
+          ) ?? [],
 
-      faqTitle:
-      acf?.faqTitle ?? "",
+          faqTitle:
+          acf?.faqTitle ?? "",
 
-      faqSubText:
-      acf?.faqSubText ?? "",
-      
-      faqCta: acf?.faqCta
-            ?{
-              title:
-                acf?.faqCta.title ?? "",
+          faqSubText:
+          acf?.faqSubText ?? "",
+          
+          faqCta: acf?.faqCta
+                ?{
+                  title:
+                    acf?.faqCta.title ?? "",
 
-              url:
-                acf?.faqCta.url ?? "#",
+                  url:
+                    acf?.faqCta.url ?? "#",
 
-              target:
-                acf?.faqCta.target ?? "",
-            }
-          : undefined,
-  },
+                  target:
+                    acf?.faqCta.target ?? "",
+                }
+              : undefined,
+      },
 
-  products:
-    data.productCategory.products.nodes.map(
-      mapProduct
-    ),
-};
+      products:
+        data.productCategory.products.nodes.map(
+          mapProduct
+        ),
+    };
   }
 
   async getProductBySlug(
@@ -134,138 +134,163 @@ async getRandomProducts(
     return mapProduct(data.product);
     const product = mapProduct(data.product);
 
-product.relatedProducts =
-  data.product.related?.nodes
-    ?.map(mapProduct)
-    ?? [];
+      product.relatedProducts =
+        data.product.related?.nodes
+          ?.map(mapProduct)
+          ?? [];
 
-return product;
-  }
+      return product;
+        }
 
   async getChildCategories(
-  parentSlug: string
-): Promise<ChildCategory[]> {
-  const data: any =
-    await graphqlFetch(
-      GET_CATEGORY_CHILDREN,
-      {
-        slug: parentSlug,
-      }
-    );
+    parentSlug: string
+  ): Promise<ChildCategory[]> {
+    const data: any =
+      await graphqlFetch(
+        GET_CATEGORY_CHILDREN,
+        {
+          slug: parentSlug,
+        }
+      );
 
-  const children =
-    data?.productCategory
-      ?.children?.nodes ?? [];
+    const children =
+      data?.productCategory
+        ?.children?.nodes ?? [];
 
-  return children.map(
-    (category: any) => ({
-      id:
-        category.databaseId,
-
-      name:
-        category.name,
-
-      slug:
-        category.slug,
-
-      description:
-        category.description ?? "",
-
-      image: {
-        url:
-          category
-            ?.acfProductCategory
-            ?.homeIcon
-            ?.node
-            ?.sourceUrl ?? "",
-
-        alt:
-          category
-            ?.acfProductCategory
-            ?.homeIcon
-            ?.node
-            ?.altText ?? "",
-      },
-    })
-  );
-}
-
-async getMainCategories() {
-  const data: any =
-    await graphqlFetch(
-      GET_MAIN_PRODUCT_CATEGORIES
-    );
-
-  return (
-    data?.productCategories?.nodes?.map(
+    return children.map(
       (category: any) => ({
         id:
           category.databaseId,
 
         name:
-          category.name ?? "",
+          category.name,
 
         slug:
-          category.slug ?? "",
+          category.slug,
 
         description:
           category.description ?? "",
 
         image: {
           url:
-            category.image
+            category
+              ?.acfProductCategory
+              ?.homeIcon
+              ?.node
               ?.sourceUrl ?? "",
 
           alt:
-            category.image
+            category
+              ?.acfProductCategory
+              ?.homeIcon
+              ?.node
               ?.altText ?? "",
         },
-
-        shortTitle:
-          category.acfProductCategory?.shortTitle ?? "",
-
-        children: [],
       })
-    ) ?? []
-  );
-}
-
-async getBestSellingProducts(
-  first = 10
-) {
-  const data: any =
-    await graphqlFetch(
-      GET_BEST_SELLING_PRODUCTS,
-      {
-        first,
-      }
     );
+  }
+
+  async getMainCategories() {
+    const data: any =
+      await graphqlFetch(
+        GET_MAIN_PRODUCT_CATEGORIES
+      );
+
+    return (
+      data?.productCategories?.nodes?.map(
+        (category: any) => ({
+          id:
+            category.databaseId,
+
+          name:
+            category.name ?? "",
+
+          slug:
+            category.slug ?? "",
+
+          description:
+            category.description ?? "",
+
+          image: {
+            url:
+              category.image
+                ?.sourceUrl ?? "",
+
+            alt:
+              category.image
+                ?.altText ?? "",
+          },
+
+          shortTitle:
+            category.acfProductCategory?.shortTitle ?? "",
+
+          children: [],
+        })
+      ) ?? []
+    );
+  }
+
+  async getBestSellingProducts(
+    first = 10
+  ) {
+    const data: any =
+      await graphqlFetch(
+        GET_BEST_SELLING_PRODUCTS,
+        {
+          first,
+        }
+      );
+
+    return (
+      data?.products?.nodes?.map(
+        (node: any) =>
+          mapProduct(node)
+      ) ?? []
+    );
+  }
+
+  async getShopPage() {
+    const data: any =
+      await graphqlFetch(GET_SHOP_PAGE,
+        {
+          id: "7",
+        });
+
+    return {
+      title: data?.page?.title ?? "Shop",
+      description: data?.page?.content ?? "",
+      image: {
+        url:
+          data?.page?.featuredImage?.node?.sourceUrl ?? "",
+        alt:
+          data?.page?.featuredImage?.node?.altText ?? "",
+      },
+    };
+  }
+async searchProducts(
+  search: string
+): Promise<Product[]> {
+  const term = search.trim();
+
+  if (!term) {
+    return [];
+  }
+
+  const data = await graphqlFetch<{
+    products: {
+      nodes: any[];
+    };
+  }>(
+    SEARCH_PRODUCTS,
+    {
+      search: term,
+    }
+  );
 
   return (
-    data?.products?.nodes?.map(
-      (node: any) =>
-        mapProduct(node)
-    ) ?? []
+    data.products?.nodes?.map(mapProduct) ??
+    []
   );
-}
-
-async getShopPage() {
-  const data: any =
-    await graphqlFetch(GET_SHOP_PAGE,
-      {
-        id: "7",
-      });
-
-  return {
-    title: data?.page?.title ?? "Shop",
-    description: data?.page?.content ?? "",
-    image: {
-      url:
-        data?.page?.featuredImage?.node?.sourceUrl ?? "",
-      alt:
-        data?.page?.featuredImage?.node?.altText ?? "",
-    },
-  };
 }
   
 }

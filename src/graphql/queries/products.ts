@@ -97,3 +97,50 @@ export const GET_BEST_SELLING_PRODUCTS = `
     }
   }
 `;
+
+export const SEARCH_PRODUCTS = `
+  query SearchProducts($search: String!, $first: Int = 100) {
+    products(
+      first: $first
+      where: {
+        search: $search
+      }
+    ) {
+      nodes {
+        __typename
+
+        databaseId
+        slug
+        name
+        sku
+
+        featured
+
+        image {
+          sourceUrl
+          altText
+        }
+
+        shortDescription
+        description
+
+        averageRating
+        reviewCount
+
+        productCategories {
+          nodes {
+            databaseId
+            name
+            slug
+          }
+        }
+
+        ... on ProductWithPricing {
+          price
+          regularPrice
+          salePrice
+        }
+      }
+    }
+  }
+`;

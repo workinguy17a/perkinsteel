@@ -2,6 +2,7 @@
 
 import {useEffect, useMemo, useRef, useState,} from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type MenuItem = {
     id?: string;
@@ -25,6 +26,8 @@ export default function HeaderClient({
     const [menuOpen, setMenuOpen] = useState(false);
     const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
     const [searchOpen, setSearchOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const router = useRouter();
 
     const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -140,6 +143,17 @@ export default function HeaderClient({
     const closeMenu = () => {
         setMenuOpen(false);
         setOpenSubmenu(null);
+    };
+
+    const handleQuickSearch = (
+        term: string
+        ) => {
+        setSearchOpen(false);
+        setSearchTerm(term);
+
+        router.push(
+            `/search?q=${encodeURIComponent(term)}`
+        );
     };
 
     return (
@@ -320,15 +334,27 @@ export default function HeaderClient({
                         onSubmit={(event) => {
                             event.preventDefault();
 
-                            /*
-                            * Later we will connect this
-                            * to the real search page.
-                            */
+                            const term = searchTerm.trim();
+
+                            if (!term) {
+                            searchInputRef.current?.focus();
+                            return;
+                            }
+
+                            setSearchOpen(false);
+
+                            router.push(
+                            `/search?q=${encodeURIComponent(term)}`
+                            );
                         }}
-                    >
+                        >
                         <input
                             ref={searchInputRef}
                             type="search"
+                            value={searchTerm}
+                            onChange={(event) =>
+                            setSearchTerm(event.target.value)
+                            }
                             placeholder="Search products..."
                             aria-label="Search products"
                         />
@@ -339,22 +365,37 @@ export default function HeaderClient({
                         >
                             <i className="fas fa-search"></i>
                         </button>
-                    </form>
+                        </form>
 
                     <div className="search-suggestions">
                         <span>Popular:</span>
 
-                        <button type="button">
+                        <button
+                            type="button"
+                            onClick={() =>
+                                handleQuickSearch("Pocket Knives")
+                            }
+                            >
                             Pocket Knives
-                        </button>
+                            </button>
 
-                        <button type="button">
+                            <button
+                            type="button"
+                            onClick={() =>
+                                handleQuickSearch("Chef Knives")
+                            }
+                            >
                             Chef Knives
-                        </button>
+                            </button>
 
-                        <button type="button">
+                            <button
+                            type="button"
+                            onClick={() =>
+                                handleQuickSearch("Kitchenware")
+                            }
+                            >
                             Kitchenware
-                        </button>
+                            </button>
                     </div>
 
                 </div>
