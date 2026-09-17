@@ -69,7 +69,7 @@ nav.breadcrumb li:last-child span {
 }
 
 .inner-content-wrap h1 {
-    margin: 0;
+    margin: 0 0 15px;
 
     color: var(--red);
 

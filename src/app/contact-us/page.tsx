@@ -30,129 +30,313 @@ export default async function ContactPage() {
         ]}
       />
 
-      <section className="contactform-wrapper py-16">
+
+      {/* =========================================================
+          CONTACT FORM + INFORMATION
+      ========================================================= */}
+
+      <section className="contactform-wrapper">
+
         <div className="mx-auto max-w-7xl px-4">
 
-          <div className="grid grid-cols-12 gap">
-            <div className="col-span-12 md:col-span-7 p-4">
-                {/* CONTACT FORM */}
-                <div className="contact-form">
-                <h2 className="mb-3 text-3xl font-bold"
-                    dangerouslySetInnerHTML={{
-                __html: contact.form.title,
-                }}
+          <div className="contact-main-grid">
+
+            {/* =========================================
+                CONTACT FORM
+            ========================================= */}
+
+            <div className="contact-form reveal fade-right">
+
+              <div className="contact-section-heading">
+
+                <h2
+                  dangerouslySetInnerHTML={{
+                    __html: contact.form.title,
+                  }}
                 />
 
                 {contact.form.text && (
-                    <p className="mb-8 text-gray-600">
+                  <p>
                     {contact.form.text}
-                    </p>
+                  </p>
                 )}
 
-                {/* We'll render the actual form here */}
-                <ContactForm />
-                </div>
+              </div>
+
+
+              <ContactForm />
+
             </div>
 
-            <div className="col-span-12 md:col-span-5 p-4">
-                {/* CONTACT INFORMATION */}
-                <div className="contact-info">
-                <h2 className="mb-3 text-3xl font-bold"
-                    dangerouslySetInnerHTML={{
-                __html: contact.info.title,
-                }}
+
+            {/* =========================================
+                CONTACT INFORMATION
+            ========================================= */}
+
+            <div
+              className="contact-info reveal fade-left"
+              style={
+                {
+                  "--delay": "100ms",
+                } as React.CSSProperties
+              }
+            >
+
+              <div className="contact-section-heading">
+
+                <h2
+                  dangerouslySetInnerHTML={{
+                    __html: contact.info.title,
+                  }}
                 />
 
-                <p
+                {contact.info.text && (
+                  <div
                     dangerouslySetInnerHTML={{
-                    __html: contact.info.text,
+                      __html: contact.info.text,
                     }}
-                />
-
-                <div className="con-info">
-                    <ul>
-                        <li><span><img src="/assets/image/call.webp" alt="Logo" /></span><div><h4>Call Us</h4><a href={`tel:${global.phoneNumber}`}>{global.phoneNumber}</a></div></li>
-                        <li><span><img src="/assets/image/mail.webp" alt="Logo" /></span><div><h4>Email Us</h4><a href={`mailto:${global.email}`}>{global.email}</a></div></li>
-                        <li><span><img src="/assets/image/location.webp" alt="Logo" /></span><div><h4>Address</h4>{global.address}</div></li>
-                    </ul>
-                </div>
-
-                {contact.info.followUsTitle && (
-                    <h3 className="mt-8 text-xl font-bold" 
-                        dangerouslySetInnerHTML={{
-                __html: contact.info.followUsTitle,
-                }}
-                    />
+                  />
                 )}
-                <ul className="con-social">
-                    {global.socialLinks.map(
-                            (social, index) => (
-                            <a key={index} href={social.url} className="fsocial"><i className={`fa-brands fa-${social.icons}`}></i></a>
-                            )
-                            )}
+
+              </div>
+
+
+              {/* CONTACT DETAILS */}
+
+              <div className="con-info">
+
+                <ul>
+
+                  {/* PHONE */}
+
+                  <li>
+
+                    <span className="contact-info-icon">
+
+                      <img
+                        src="/assets/image/call.webp"
+                        alt=""
+                      />
+
+                    </span>
+
+                    <div>
+
+                      <h4>Call Us</h4>
+
+                      <a
+                        href={`tel:${global.phoneNumber}`}
+                      >
+                        {global.phoneNumber}
+                      </a>
+
+                    </div>
+
+                  </li>
+
+
+                  {/* EMAIL */}
+
+                  <li>
+
+                    <span className="contact-info-icon">
+
+                      <img
+                        src="/assets/image/mail.webp"
+                        alt=""
+                      />
+
+                    </span>
+
+                    <div>
+
+                      <h4>Email Us</h4>
+
+                      <a
+                        href={`mailto:${global.email}`}
+                      >
+                        {global.email}
+                      </a>
+
+                    </div>
+
+                  </li>
+
+
+                  {/* ADDRESS */}
+
+                  <li>
+
+                    <span className="contact-info-icon">
+
+                      <img
+                        src="/assets/image/location.webp"
+                        alt=""
+                      />
+
+                    </span>
+
+                    <div>
+
+                      <h4>Address</h4>
+
+                      <p>
+                        {global.address}
+                      </p>
+
+                    </div>
+
+                  </li>
+
                 </ul>
+
+              </div>
+
+
+              {/* =========================================
+                  SOCIAL LINKS
+              ========================================= */}
+
+              {contact.info.followUsTitle && (
+
+                <div className="contact-social-wrapper">
+
+                  <h3
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        contact.info.followUsTitle,
+                    }}
+                  />
+
+
+                  <div className="con-social">
+
+                    {global.socialLinks.map(
+                      (social, index) => (
+
+                        <a
+                          key={index}
+                          href={social.url}
+                          className="fsocial"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={
+                            social.icons
+                          }
+                        >
+
+                          <i
+                            className={`fa-brands fa-${social.icons}`}
+                          ></i>
+
+                        </a>
+
+                      )
+                    )}
+
+                  </div>
+
                 </div>
-            </div>  
+
+              )}
+
+            </div>
 
           </div>
-        </div>
-    </section>
-
-    <section className="contact-features py-16">
-        <div className="mx-auto max-w-7xl px-4">
-
-          {/* FEATURE BOXES */}
-          {contact.features.length > 0 && (
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
-              {contact.features.map(
-                (feature, index) => (
-                  <div
-                    key={index}
-                    className="con-feature-box"
-                  >
-                    <div>
-                    {feature.icon.url && (
-                      <img
-                        src={feature.icon.url}
-                        alt={feature.icon.alt}
-                        className="mb-4"
-                      />
-                    )}
-                    </div>
-                    <div>
-                    <h3 className="text-lg font-bold">
-                      {feature.title}
-                    </h3>
-
-                    <p className="text-sm">
-                      {feature.text}
-                    </p>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-          )}
 
         </div>
+
       </section>
 
 
-      {/* MAP */}
+      {/* =========================================================
+          CONTACT FEATURES
+      ========================================================= */}
+
+      {contact.features.length > 0 && (
+
+        <section className="contact-features">
+
+          <div className="mx-auto max-w-7xl px-4">
+
+            <div className="contact-features-grid">
+
+              {contact.features.map(
+                (feature, index) => (
+
+                  <div
+                    key={index}
+                    className="con-feature-box reveal fade-up"
+                    style={
+                      {
+                        "--delay":
+                          `${index * 80}ms`,
+                      } as React.CSSProperties
+                    }
+                  >
+
+                    {feature.icon.url && (
+
+                      <div className="con-feature-icon">
+
+                        <img
+                          src={feature.icon.url}
+                          alt={
+                            feature.icon.alt ||
+                            feature.title
+                          }
+                        />
+
+                      </div>
+
+                    )}
+
+
+                    <div className="con-feature-content">
+
+                      <h3>
+                        {feature.title}
+                      </h3>
+
+                      {feature.text && (
+                        <p>
+                          {feature.text}
+                        </p>
+                      )}
+
+                    </div>
+
+                  </div>
+
+                )
+              )}
+
+            </div>
+
+          </div>
+
+        </section>
+
+      )}
+
+
+      {/* =========================================================
+          MAP
+      ========================================================= */}
+
       {contact.map && (
-        <section className="contact-map w-full">
+
+        <section className="contact-map">
+
           <div
-            className="
-              [&_iframe]:block
-              [&_iframe]:h-[450px]
-              [&_iframe]:w-full
-              [&_iframe]:border-0
-            "
+            className="contact-map-embed"
             dangerouslySetInnerHTML={{
               __html: contact.map,
             }}
           />
+
         </section>
+
       )}
     </>
   );
