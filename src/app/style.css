@@ -4746,8 +4746,367 @@ section.cat-pro-section {
 .catblocks .product-card img{padding: 0;}
 
 .catblocks .prd-info{padding: 0;}
+
 @media(max-width:767px){
     .arrow-wrap {
         justify-content: flex-start;
     }
+}
+
+
+/* =========================================================
+   404 PAGE
+========================================================= */
+
+.not-found-page {
+    display: flex;
+
+    width: 100%;
+    min-height: 75vh;
+
+    align-items: center;
+
+    /*
+     Fixed header compensation.
+     Remove this calculation if main already globally
+     compensates for your fixed header.
+    */
+    padding:
+        calc(var(--header-height, 85px) + 55px)
+        20px
+        75px;
+
+    background: #fff;
+}
+
+
+.not-found-container {
+    width: 100%;
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   404 NUMBER
+========================================================= */
+
+.not-found-code {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 8px;
+}
+
+
+.not-found-number {
+    display: block;
+
+    color: #f0f0f0;
+
+    font-family: var(--font-play);
+
+    font-size: 180px;
+    font-weight: 700;
+
+    line-height: 0.85;
+
+    user-select: none;
+}
+
+
+.not-found-label {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    color: var(--red);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 0.2em;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+
+    transform: translate(-50%, -50%);
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.not-found-content {
+    max-width: 650px;
+
+    margin: 0 auto;
+}
+
+
+.not-found-content h1 {
+    margin: 0;
+
+    color: #111;
+
+    font-family: var(--font-play);
+
+    font-size: 40px;
+    font-weight: 700;
+
+    line-height: 1.15;
+}
+
+
+.not-found-content p {
+    max-width: 540px;
+
+    margin: 18px auto 0;
+
+    color: #666;
+
+    font-size: 14px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.not-found-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 28px;
+}
+
+
+.not-found-btn {
+    display: inline-flex;
+
+    min-width: 165px;
+    min-height: 45px;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 10px 22px;
+
+    border: 1px solid transparent;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 0.07em;
+
+    text-decoration: none;
+
+    text-transform: uppercase;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        gap 0.25s ease;
+}
+
+
+/* PRIMARY */
+
+.not-found-btn-primary {
+    border-color: var(--red);
+
+    background: var(--red);
+
+    color: #fff;
+}
+
+
+.not-found-btn-primary:hover {
+    gap: 12px;
+
+    border-color: #111;
+
+    background: #111;
+}
+
+
+.not-found-btn-primary i {
+    font-size: 9px;
+}
+
+
+/* SECONDARY */
+
+.not-found-btn-secondary {
+    border-color: #111;
+
+    background: #fff;
+
+    color: #111;
+}
+
+
+.not-found-btn-secondary:hover {
+    background: #111;
+
+    color: #fff;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.not-found-divider {
+    display: flex;
+
+    width: 300px;
+    max-width: 80%;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin: 38px auto 0;
+}
+
+
+.not-found-divider span {
+    flex: 1;
+
+    height: 1px;
+
+    background: #ddd;
+}
+
+
+.not-found-divider i {
+    display: block;
+
+    width: 7px;
+    height: 7px;
+
+    background: var(--red);
+
+    transform: rotate(45deg);
+}
+
+@media (max-width: 1023px) {
+
+    .not-found-page {
+        padding:
+            calc(var(--header-height, 85px) + 45px)
+            20px
+            65px;
+    }
+
+
+    .not-found-number {
+        font-size: 150px;
+    }
+
+
+    .not-found-content h1 {
+        font-size: 36px;
+    }
+
+}
+
+@media (max-width: 767px) {
+
+    .not-found-page {
+        min-height: 70vh;
+
+        padding:
+            calc(var(--header-height, 70px) + 40px)
+            16px
+            50px;
+    }
+
+
+    .not-found-number {
+        font-size: 115px;
+    }
+
+
+    .not-found-label {
+        font-size: 9px;
+
+        letter-spacing: 0.16em;
+    }
+
+
+    .not-found-content h1 {
+        font-size: 29px;
+    }
+
+
+    .not-found-content p {
+        margin-top: 15px;
+
+        font-size: 13px;
+
+        line-height: 1.65;
+    }
+
+
+    .not-found-actions {
+        margin-top: 24px;
+    }
+
+
+    .not-found-divider {
+        margin-top: 32px;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .not-found-number {
+        font-size: 100px;
+    }
+
+
+    .not-found-content h1 {
+        font-size: 26px;
+    }
+
+
+    .not-found-content h1 br {
+        display: none;
+    }
+
+
+    .not-found-actions {
+        flex-direction: column;
+    }
+
+
+    .not-found-btn {
+        width: 100%;
+        max-width: 280px;
+    }
+
 }
