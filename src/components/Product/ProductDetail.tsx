@@ -3,10 +3,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Product } from "@/types/product";
-import RelatedProducts from "./RelatedProducts";
 import CartService from "@/services/cart.service";
+import RelatedProducts from "./RelatedProducts";
+import ProductActionButton, { isKnifeProduct } from "./ProductActionButton";
 
 interface ProductDetailProps {
   product: Product;
@@ -15,10 +17,13 @@ interface ProductDetailProps {
 export default function ProductDetail({
   product,
 }: ProductDetailProps) {
+const router = useRouter();
 const [selectedImage, setSelectedImage] = useState(
   product.image
 );
 const [quantity, setQuantity] = useState(1);
+const [buying, setBuying] = useState(false);
+const [buyNowError, setBuyNowError] = useState("");
 
 const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -27,6 +32,22 @@ const [relatedStart, setRelatedStart] = useState(0);
 const [activeTab, setActiveTab] = useState<
   "description" | "specifications" | "shipping" | "reviews"
 >("description");
+const isKnife = isKnifeProduct(product);
+
+const handleBuyNow = async () => {
+  try {
+    setBuying(true);
+    setBuyNowError("");
+    await CartService.addItem(product.id, quantity);
+    router.push("/cart");
+  } catch (error) {
+    setBuyNowError(
+      error instanceof Error ? error.message : "Unable to add product to cart"
+    );
+  } finally {
+    setBuying(false);
+  }
+};
 
  const gallery = [
   {
@@ -44,48 +65,6 @@ const visibleThumbnails = gallery.slice(
   thumbnailStart,
   thumbnailStart + thumbnailsPerView
 );
-
-const [adding, setAdding] =
-  useState(false);
-
-const [added, setAdded] =
-  useState(false);
-
-const [cartError, setCartError] =
-  useState("");
-
-const handleAddToCart =
-  async () => {
-    try {
-      setAdding(true);
-      setAdded(false);
-      setCartError("");
-
-      await CartService.addItem(
-        product.id,
-        quantity
-      );
-
-      setAdded(true);
-
-      setTimeout(() => {
-        setAdded(false);
-      }, 2000);
-    } catch (error) {
-      console.error(
-        "Add to cart error:",
-        error
-      );
-
-      setCartError(
-        error instanceof Error
-          ? error.message
-          : "Unable to add product to cart"
-      );
-    } finally {
-      setAdding(false);
-    }
-  };
 
   return (
     <main>
@@ -374,7 +353,7 @@ const handleAddToCart =
 
 
                 {/* PRICE */}
-                <div className="product-detail-price">
+                {isKnife && <div className="product-detail-price">
 
                     {product.salePrice &&
                     product.regularPrice &&
@@ -404,17 +383,17 @@ const handleAddToCart =
 
                     )}
 
-                </div>
+                </div>}
 
 
                 {/* SHORT DESCRIPTION */}
-                {product.shortDescription && (
+                {(product.shortDescription || product.description) && (
 
                     <div
                         className="product-short-description"
                         dangerouslySetInnerHTML={{
                             __html:
-                                product.shortDescription,
+                                product.shortDescription || product.description || "",
                         }}
                     />
 
@@ -427,15 +406,17 @@ const handleAddToCart =
 
                 <div className="product-purchase-area">
 
-                    <label className="product-quantity-label">
-                        Quantity
-                    </label>
+                    {isKnife && (
+                        <label className="product-quantity-label">
+                            Quantity
+                        </label>
+                    )}
 
 
                     <div className="product-purchase-row">
 
                         {/* QUANTITY */}
-                        <div className="product-quantity">
+                        {isKnife && <div className="product-quantity">
 
                             <button
                                 type="button"
@@ -479,41 +460,36 @@ const handleAddToCart =
                                 +
                             </button>
 
-                        </div>
+                        </div>}
 
 
-                        {/* ADD TO CART */}
-                        <button
-                            type="button"
+                        <ProductActionButton
+                            product={product}
+                            quantity={quantity}
                             className="product-add-cart"
-                            onClick={handleAddToCart}
-                            disabled={adding}
-                        >
-                            {adding
-                                ? "Adding..."
-                                : added
-                                ? "Added ✓"
-                                : "Add to Cart"
-                            }
-                        </button>
+                            enquiryClassName="product-enquiry-button"
+                              enquiryOpensModal
+                        />
 
-
-                        {/* BUY NOW */}
-                        <button
-                            type="button"
-                            className="product-buy-now"
-                        >
-                            Buy Now
-                        </button>
+                        {isKnife && (
+                            <button
+                                type="button"
+                                className="product-buy-now"
+                                onClick={handleBuyNow}
+                                disabled={buying}
+                            >
+                                {buying ? "Adding..." : "Buy Now"}
+                            </button>
+                        )}
 
                     </div>
 
-
-                    {cartError && (
-                        <p className="product-cart-error">
-                            {cartError}
+                    {buyNowError && (
+                        <p className="product-cart-error" role="alert">
+                            {buyNowError}
                         </p>
                     )}
+
 
                 </div>
 

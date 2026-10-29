@@ -8,7 +8,13 @@ import {
 
 
 
-export default function ContactForm() {
+interface ContactFormProps {
+  initialMessage?: string;
+}
+
+export default function ContactForm({
+  initialMessage = "",
+}: ContactFormProps) {
   const [loading, setLoading] =
     useState(false);
 
@@ -122,6 +128,7 @@ export default function ContactForm() {
           name="your-message"
           placeholder="Your Message"
           rows={6}
+          defaultValue={initialMessage}
           className="w-full resize-none rounded-md border border-gray-300 px-4 py-3 outline-none focus:border-red-700"
         />
       </div>

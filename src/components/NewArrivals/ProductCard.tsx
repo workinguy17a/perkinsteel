@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Product } from "@/types/product";
+import ProductActionButton, { isKnifeProduct } from "@/components/Product/ProductActionButton";
 
 interface Props {
   product: Product;
@@ -10,7 +11,8 @@ interface Props {
 export default function ProductCard({ product }: any) {
   return (
     <div className="product-card min-w-[260px] bg-[#f8f8f8] rounded-3xl p-4">
-        <a href="#">
+        <div>
+            <Link href={`/product/${product.slug}`}>
             <Image 
                 src={product.image}
                 alt={product.name}
@@ -21,18 +23,20 @@ export default function ProductCard({ product }: any) {
             <h3 className="mt-6 text-[18px] leading-7">
                 {product.name}
             </h3>
+            </Link>
             <div className="price-add-cart flex justify-between items-center mt-5">
-                <span className="prd-price font-bold text-3xl">
+                {isKnifeProduct(product) && <span className="prd-price font-bold text-3xl">
                     {new Intl.NumberFormat("ar-AE", {
                         style: "currency",
                         currency: "AED",
                     }).format(product.price)}
-                </span>
-                <button className="prd-add-to-cart bg-red-700 text-white px-6 py-3 rounded-lg">
-                    Add To Cart
-                </button>
+                </span>}
+                <ProductActionButton
+                    product={product}
+                    className="prd-add-to-cart bg-red-700 text-white px-6 py-3 rounded-lg"
+                />
             </div>
-        </a>
+        </div>
     </div>    
   );
 }

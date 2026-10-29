@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { Product } from "@/types/product";
-import CartService from "@/services/cart.service";
+import ProductActionButton, { isKnifeProduct } from "./ProductActionButton";
 
 
 interface Props {
@@ -16,40 +15,6 @@ interface Props {
 export default function ProductCard({
     product,
 }: Props) {
-
-    const [adding, setAdding] = useState(false);
-    const [added, setAdded] = useState(false);
-
-
-    const handleAddToCart = async () => {
-        try {
-            setAdding(true);
-
-            await CartService.addItem(
-                product.id,
-                1
-            );
-
-            setAdded(true);
-
-            setTimeout(() => {
-                setAdded(false);
-            }, 2000);
-
-        } catch (error) {
-
-            console.error(
-                "Add to cart error:",
-                error
-            );
-
-        } finally {
-
-            setAdding(false);
-
-        }
-    };
-
 
     const hasSale =
         product.salePrice != null &&
@@ -100,7 +65,7 @@ export default function ProductCard({
                 <div className="price-add-cart">
 
                     {/* PRICE */}
-                    <div className="prd-price">
+                    {isKnifeProduct(product) && <div className="prd-price">
 
                         {hasSale ? (
                             <>
@@ -121,25 +86,14 @@ export default function ProductCard({
                             </span>
                         )}
 
-                    </div>
+                    </div>}
 
 
                     {/* ADD TO CART */}
-                    <button
-                        type="button"
-                        onClick={handleAddToCart}
-                        disabled={adding}
-                        className={`prd-add-to-cart ${
-                            added ? "is-added" : ""
-                        }`}
-                    >
-                        {adding
-                            ? "Adding..."
-                            : added
-                            ? "Added ✓"
-                            : "Add to Cart"
-                        }
-                    </button>
+                    <ProductActionButton
+                        product={product}
+                        className="prd-add-to-cart"
+                    />
 
                 </div>
 

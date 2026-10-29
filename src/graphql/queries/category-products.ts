@@ -4,6 +4,11 @@ query GetCategoryProducts($slug: ID!, $first: Int = 500) {
     databaseId
     name
     slug
+          ancestors(first: 100) {
+            nodes {
+              slug
+            }
+          }
     description
     acfProductCategory {
       categoryBanner {
@@ -47,6 +52,11 @@ query GetCategoryProducts($slug: ID!, $first: Int = 500) {
           nodes {
             name
             slug
+            ancestors(first: 100) {
+              nodes {
+                slug
+              }
+            }
           }
         }
 
@@ -83,6 +93,74 @@ export const GET_MAIN_PRODUCT_CATEGORIES = `
           altText
         }       
         
+      }
+    }
+  }
+`;
+
+
+export const GET_FEATURED_CATEGORY_PRODUCTS = `
+  query GetFeaturedCategoryProducts(
+    $slug: ID!
+    $first: Int = 100
+    $after: String
+  ) {
+    productCategory(
+      id: $slug
+      idType: SLUG
+    ) {
+      databaseId
+      name
+      slug
+
+      products(
+        first: $first
+        after: $after
+        where: {
+          featured: true
+        }
+      ) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        nodes {
+          __typename
+          databaseId
+          slug
+          name
+          sku
+          featured
+
+          image {
+            sourceUrl
+            altText
+          }
+
+          shortDescription
+          description
+          averageRating
+          reviewCount
+
+          productCategories {
+            nodes {
+              databaseId
+              name
+              slug
+              ancestors(first: 100) {
+                nodes {
+                  slug
+                }
+              }
+            }
+          }
+
+          ... on ProductWithPricing {
+            price
+            regularPrice
+            salePrice
+          }
+        }
       }
     }
   }

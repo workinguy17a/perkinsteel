@@ -29,11 +29,13 @@ export default function KitchenwareCategorySlider({
               <a href={`/category/${category.slug}`}>
 
                 <span className="black-bg">
-                  <img
-                    src={category.image.url}
-                    alt={category.image.alt || category.name}
-                    className="kw-category-image"
-                  />
+                  {category.image?.url && (
+                    <img
+                      src={category.image.url}
+                      alt={category.image.alt || category.name}
+                      className="kw-category-image"
+                    />
+                  )}
                 </span>
 
                 <h3>{category.name}</h3>
@@ -74,11 +76,13 @@ export default function KitchenwareCategorySlider({
                   <a href={`/category/${category.slug}`}>
 
                     <span className="black-bg">
-                      <img
-                        src={category.image.url}
-                        alt={category.image.alt || category.name}
-                        className="kw-category-image"
-                      />
+                      {category.image?.url && (
+                        <img
+                          src={category.image.url}
+                          alt={category.image.alt || category.name}
+                          className="kw-category-image"
+                        />
+                      )}
                     </span>
 
                     <h3>{category.name}</h3>

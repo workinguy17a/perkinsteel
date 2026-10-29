@@ -10,7 +10,7 @@ export const GET_CATEGORY_CHILDREN = `
       name
       slug
 
-      children {
+      children(first: 100) {
         nodes {
           databaseId
           name

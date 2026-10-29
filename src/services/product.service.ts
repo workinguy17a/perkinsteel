@@ -1,8 +1,11 @@
 import { graphqlFetch } from "@/graphql/fetcher";
 import { GET_PRODUCTS,GET_BEST_SELLING_PRODUCTS,SEARCH_PRODUCTS, } from "@/graphql/queries/products";
 import { GET_PRODUCT_BY_SLUG, GET_SHOP_PAGE, } from "@/graphql/queries/product";
-import { GET_CATEGORY_PRODUCTS } from "@/graphql/queries/category-products";
-import { GET_MAIN_PRODUCT_CATEGORIES,} from "@/graphql/queries/category-products";
+import {
+  GET_CATEGORY_PRODUCTS,
+  GET_FEATURED_CATEGORY_PRODUCTS,
+  GET_MAIN_PRODUCT_CATEGORIES,
+} from "@/graphql/queries/category-products";
 //import {GET_BEST_SELLING_PRODUCTS} from "@/graphql/queries/products";
 import { mapProduct } from "@/mappers/product.mapper";
 import { Product } from "@/types/product";
@@ -228,6 +231,82 @@ class ProductService {
         })
       ) ?? []
     );
+  }
+
+  async getFeaturedProductsByCategory(
+    slug: string,
+    first = 8
+  ): Promise<Product[]> {
+    const visitedCategories = new Set<string>();
+
+    const getFeaturedProductsForSlug = async (
+      categorySlug: string
+    ): Promise<Product[]> => {
+      if (visitedCategories.has(categorySlug)) return [];
+      visitedCategories.add(categorySlug);
+
+      const featuredProducts: Product[] = [];
+      let after: string | undefined;
+      let hasNextPage = true;
+      let pagesFetched = 0;
+
+      while (
+        hasNextPage &&
+        featuredProducts.length < first &&
+        pagesFetched < 20
+      ) {
+        pagesFetched += 1;
+        const data: any = await graphqlFetch(
+          GET_FEATURED_CATEGORY_PRODUCTS,
+          {
+            slug: categorySlug,
+            first: 100,
+            after,
+          }
+        );
+
+        const connection = data?.productCategory?.products;
+        const pageProducts =
+          connection?.nodes?.map(mapProduct) ?? [];
+
+        featuredProducts.push(
+          ...pageProducts.filter(
+            (product: Product) => product.featured === true
+          )
+        );
+
+        hasNextPage = Boolean(connection?.pageInfo?.hasNextPage);
+        const nextCursor = connection?.pageInfo?.endCursor ?? undefined;
+
+        if (!hasNextPage || !nextCursor || nextCursor === after) {
+          break;
+        }
+
+        after = nextCursor;
+      }
+
+      if (featuredProducts.length >= first) {
+        return featuredProducts.slice(0, first);
+      }
+
+      const childCategories = await this.getChildCategories(categorySlug);
+      const childProducts = await Promise.all(
+        childCategories.map((category) =>
+          getFeaturedProductsForSlug(category.slug)
+        )
+      );
+
+      const uniqueProducts = new Map<number, Product>();
+      for (const product of [...featuredProducts, ...childProducts.flat()]) {
+        if (!uniqueProducts.has(product.id)) {
+          uniqueProducts.set(product.id, product);
+        }
+      }
+
+      return [...uniqueProducts.values()].slice(0, first);
+    };
+
+    return getFeaturedProductsForSlug(slug);
   }
 
   async getBestSellingProducts(

@@ -31,6 +31,11 @@ query GetProductBySlug($slug: ID!) {
         databaseId
         name
         slug
+        ancestors(first: 100) {
+          nodes {
+            slug
+          }
+        }
       }
     }
 
@@ -78,6 +83,11 @@ query GetProductBySlug($slug: ID!) {
           databaseId
           name
           slug
+          ancestors(first: 100) {
+            nodes {
+              slug
+            }
+          }
         }
       }
 

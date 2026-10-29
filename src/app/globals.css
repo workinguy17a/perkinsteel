@@ -33,7 +33,8 @@ body {
 ========================================= */
 
 .reveal {
-    opacity: 0;
+    opacity: 1;
+    transform: none;
 
     transition:
         opacity 0.75s ease var(--delay, 0ms),
@@ -42,39 +43,38 @@ body {
         var(--delay, 0ms);
 }
 
-
 /* Fade Up */
-.reveal.fade-up {
+html.reveal-ready .reveal.fade-up:not(.is-visible) {
     transform: translateY(30px);
 }
 
 
 /* Fade Down */
-.reveal.fade-down {
+html.reveal-ready .reveal.fade-down:not(.is-visible) {
     transform: translateY(-30px);
 }
 
 
 /* Fade Left */
-.reveal.fade-left {
+html.reveal-ready .reveal.fade-left:not(.is-visible) {
     transform: translateX(35px);
 }
 
 
 /* Fade Right */
-.reveal.fade-right {
+html.reveal-ready .reveal.fade-right:not(.is-visible) {
     transform: translateX(-35px);
 }
 
 
 /* Zoom */
-.reveal.zoom-in {
+html.reveal-ready .reveal.zoom-in:not(.is-visible) {
     transform: scale(0.94);
 }
 
 
 /* Soft Zoom */
-.reveal.soft-zoom {
+html.reveal-ready .reveal.soft-zoom:not(.is-visible) {
     transform:
         translateY(20px)
         scale(0.97);
@@ -88,6 +88,63 @@ body {
     transform:
         translate3d(0, 0, 0)
         scale(1);
+}
+
+.product-enquiry-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  padding: 24px;
+  background: rgb(0 0 0 / 65%);
+}
+
+.product-enquiry-dialog {
+  position: relative;
+  width: min(100%, 560px);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-radius: 12px;
+  padding: 32px;
+  background: #fff;
+  color: #171717;
+  box-shadow: 0 20px 60px rgb(0 0 0 / 25%);
+}
+
+.product-enquiry-dialog h2 {
+  margin: 0 40px 8px 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.product-enquiry-dialog > p {
+  margin: 0 0 24px;
+  color: #555;
+}
+
+.product-enquiry-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  border: 0;
+  background: transparent;
+  color: #171717;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .product-enquiry-backdrop {
+    padding: 12px;
+  }
+
+  .product-enquiry-dialog {
+    max-height: calc(100vh - 24px);
+    padding: 24px 18px;
+  }
 }
 
 

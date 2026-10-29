@@ -1218,7 +1218,7 @@ span.prd-price {
 }
 
 
-button.prd-add-to-cart {
+.prd-add-to-cart {
     padding: 5px 14px;
 
     border-radius: 6px;
@@ -1231,7 +1231,7 @@ button.prd-add-to-cart {
 }
 
 
-button.prd-add-to-cart:hover {
+.prd-add-to-cart:hover {
     background: #8a0000;
 
     transform: translateY(-1px);
@@ -2508,7 +2508,7 @@ section.hm-usp-bar {
 ========================================= */
 
 .kw-content > * {
-    opacity: 0;
+    opacity: 1;
 
     transform: translateY(24px);
 

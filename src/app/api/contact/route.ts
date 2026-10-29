@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const WORDPRESS_URL =
-  "httpss://admin.perkinssteel.com";
+  "https://admin.perkinssteel.com";
 
 const CF7_FORM_ID = "6a734dc";
 

@@ -6,6 +6,20 @@ export default function AnimationProvider() {
 
     useEffect(() => {
 
+        // Keep page content visible in browsers that do not support
+        // IntersectionObserver instead of leaving every reveal hidden.
+        if (typeof IntersectionObserver === "undefined") {
+            document
+                .querySelectorAll(".reveal:not(.is-visible)")
+                .forEach((element) => {
+                    element.classList.add("is-visible");
+                });
+
+            return;
+        }
+
+        document.documentElement.classList.add("reveal-ready");
+
         /* =========================================
            INTERSECTION OBSERVER
         ========================================= */
@@ -31,7 +45,9 @@ export default function AnimationProvider() {
 
             },
             {
-                threshold: 0.15,
+                // Large sections may never reach a 15% viewport ratio.
+                // Reveal them as soon as any part enters the viewport.
+                threshold: 0,
                 rootMargin:
                     "0px 0px -40px 0px",
             }
@@ -113,6 +129,8 @@ export default function AnimationProvider() {
             observer.disconnect();
 
             mutationObserver.disconnect();
+
+            document.documentElement.classList.remove("reveal-ready");
 
         };
 

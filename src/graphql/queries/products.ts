@@ -38,6 +38,11 @@ query GetProducts($first: Int = 100, $after: String) {
           databaseId
           name
           slug
+          ancestors(first: 100) {
+            nodes {
+              slug
+            }
+          }
         }
       }
 
@@ -66,6 +71,11 @@ export const GET_BEST_SELLING_PRODUCTS = `
         databaseId
         name
         slug
+          ancestors(first: 100) {
+            nodes {
+              slug
+            }
+          }
         sku
 
         image {
@@ -77,6 +87,11 @@ export const GET_BEST_SELLING_PRODUCTS = `
           nodes {
             name
             slug
+            ancestors(first: 100) {
+              nodes {
+                slug
+              }
+            }
           }
         }
 
@@ -132,6 +147,11 @@ export const SEARCH_PRODUCTS = `
             databaseId
             name
             slug
+            ancestors(first: 100) {
+              nodes {
+                slug
+              }
+            }
           }
         }
 

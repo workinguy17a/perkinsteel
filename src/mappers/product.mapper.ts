@@ -56,8 +56,13 @@ export function mapProduct(node: any): Product {
 
     // ADD THIS
     categorySlugs:
-      node.productCategories?.nodes?.map(
-        (category: any) => category.slug
+      node.productCategories?.nodes?.flatMap(
+        (category: any) => [
+          category.slug,
+          ...(category.ancestors?.nodes?.map(
+            (ancestor: any) => ancestor.slug
+          ) ?? []),
+        ].filter(Boolean)
       ) ?? [],
 
     stockStatus: "instock",

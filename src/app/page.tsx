@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "@/types/product";
 import NewArrivals from "@/components/NewArrivals/NewArrivals";
 import AllProducts from "@/components/AllProducts/AllProducts";
 import Testimonials from "@/components/ClientTestimonials/ClientTestimonials";
@@ -14,7 +13,6 @@ import HospitalityCategories
     from "@/components/Sliders/HospitalityCategories";
 
 export default async function Home() {
-    const products = await ProductService.getProducts();
     const homepage = await HomepageService.getHomepage();
     const banner = homepage.banner;
     const categoryBlocks = homepage.categoryBlocks;
@@ -29,28 +27,16 @@ export default async function Home() {
     const categoryProductData = await Promise.all(
         homepage.featuredProductCategories.map(
             async (category) => {
-            const data =
-                await ProductService.getProductsByCategory(
-                category.slug,
-                100
-                );
+                const products =
+                    await ProductService.getFeaturedProductsByCategory(
+                        category.slug,
+                        homepage.productsPerCategory
+                    );
 
-      return { 
-        category,
-        products:
-          data?.products
-            .filter(
-            (product: Product) =>
-                product.featured === true
-            )
-            .slice(
-              0,
-              homepage.productsPerCategory
-            ) ?? [],
-      };
-    }
-  )
-);
+                return { category, products };
+            }
+        )
+    );
 
 const latestProducts =
   await ProductService.getLatestProducts(12);
