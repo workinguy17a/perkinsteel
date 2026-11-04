@@ -155,7 +155,7 @@ export default async function ShopPage() {
               }
               className={
                 isDark
-                  ? "catblocks bg-black py-12 text-white lg:py-14"
+                  ? "catblocks catblocks-dark bg-black py-12 text-white lg:py-14"
                   : "catblocks bg-[#fff1f1] py-12 text-black lg:py-14"
               }
             >

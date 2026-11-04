@@ -48,6 +48,7 @@ export default function ShopProductSlider({
             products={products}
             desktopSlides={desktopSlides}
             setSwiper={setSwiper}
+            className="shop-category-product-slider"
         />
 
     </div>

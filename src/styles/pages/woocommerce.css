@@ -589,6 +589,41 @@
 }
 
 
+/* Product text needs contrast inside the shop's black collection rows. */
+.catblocks-dark .product-title,
+.catblocks-dark .prd-price,
+.catblocks-dark .saleprice,
+.catblocks-dark .regprice,
+.catblocks-dark .old-price,
+.catblocks-dark .product-title-link:hover .product-title {
+    color: #fff;
+}
+
+
+/* Keep Shop collection cards equal in height with their actions aligned. */
+.shop-category-product-slider .swiper-wrapper {
+    align-items: stretch;
+}
+
+.shop-category-product-slider .swiper-slide {
+    display: flex;
+    height: auto;
+    align-items: stretch;
+}
+
+.shop-category-product-slider .product-card {
+    height: 100%;
+}
+
+.shop-category-product-slider .prd-info {
+    flex: 1;
+}
+
+.shop-category-product-slider .price-add-cart {
+    margin-top: auto;
+}
+
+
 /*
 Important:
 all images use the exact same proportional area.

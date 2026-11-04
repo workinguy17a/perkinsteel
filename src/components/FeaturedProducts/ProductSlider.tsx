@@ -12,11 +12,13 @@ interface ProductSliderProps {
   products: Product[];
   desktopSlides?: number;
   setSwiper?: (swiper: any) => void;
+  className?: string;
 }
 
 export default function ProductSlider({
   products = [],desktopSlides = 5,
   setSwiper,
+  className,
 }: ProductSliderProps) {
   if (!products.length) {
     return (
@@ -28,6 +30,7 @@ export default function ProductSlider({
 
   return (
     <Swiper
+      className={className}
       onSwiper={setSwiper}
       spaceBetween={25}
       loop={products.length > 5}
