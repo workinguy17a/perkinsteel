@@ -138,7 +138,10 @@ export async function GET() {
       data
         .filter(
           (gateway: any) =>
-            gateway.enabled === true
+            gateway.enabled === true ||
+            ["yes", "1", "true"].includes(
+              String(gateway.enabled).toLowerCase()
+            )
         )
         .sort(
           (

@@ -181,15 +181,24 @@ const states =
       }
 
       if (paymentResponse.ok) {
-        setPaymentMethods(
-          paymentData
-        );
+        const currencyCode = String(
+          cartData?.totals?.currency_code ?? "AED"
+        ).toUpperCase();
+        const availablePaymentMethods =
+          currencyCode === "AED"
+            ? paymentData.filter((method: { id?: string }) => {
+                const id = String(method.id ?? "").toLowerCase();
+                return id !== "paypal" && !id.startsWith("ppcp");
+              })
+            : paymentData;
+
+        setPaymentMethods(availablePaymentMethods);
 
         if (
-          paymentData.length > 0
+          availablePaymentMethods.length > 0
         ) {
           setSelectedPaymentMethod(
-            paymentData[0].id
+            availablePaymentMethods[0].id
           );
         }
       }
@@ -1201,6 +1210,12 @@ const formatPrice = (
               Payment Method
             </h3>
 
+            {String(cart?.totals?.currency_code ?? "AED").toUpperCase() === "AED" && (
+              <p className="checkout-payment-description">
+                PayPal checkout is unavailable for AED orders. Choose bank transfer or cash on delivery.
+              </p>
+            )}
+
 
             {paymentMethods.length === 0 ? (
 
@@ -1213,7 +1228,17 @@ const formatPrice = (
               <div className="checkout-payment-options">
 
                 {paymentMethods.map(
-                  (method: any) => (
+                  (method: any) => {
+                    const paymentMethodId = String(
+                      method.id ?? ""
+                    ).toLowerCase();
+                    const isPayPal = [
+                      "paypal",
+                      "ppcp",
+                      "ppcp-gateway",
+                    ].includes(paymentMethodId);
+
+                    return (
 
                     <label
                       key={method.id}
@@ -1245,8 +1270,15 @@ const formatPrice = (
                         <span className="checkout-custom-radio"></span>
 
                         <strong>
-                          {method.title}
+                          {isPayPal ? "PayPal" : method.title}
                         </strong>
+
+                        {isPayPal && (
+                          <i
+                            aria-label="PayPal"
+                            className="fa-brands fa-paypal checkout-paypal-icon"
+                          />
+                        )}
 
                       </div>
 
@@ -1262,8 +1294,8 @@ const formatPrice = (
                       )}
 
                     </label>
-
-                  )
+                    );
+                  }
                 )}
 
               </div>
