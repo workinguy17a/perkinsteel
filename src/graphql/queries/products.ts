@@ -71,11 +71,6 @@ export const GET_BEST_SELLING_PRODUCTS = `
         databaseId
         name
         slug
-          ancestors(first: 100) {
-            nodes {
-              slug
-            }
-          }
         sku
 
         image {
