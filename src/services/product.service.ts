@@ -11,6 +11,7 @@ import { mapProduct } from "@/mappers/product.mapper";
 import { Product } from "@/types/product";
 import { GET_CATEGORY_CHILDREN } from "@/graphql/queries/category-children";
 import { ChildCategory } from "@/types/category";
+import { getFrontendUrl } from "@/utils/url";
 
 class ProductService {
   async getProducts(first = 500): Promise<Product[]> {
@@ -105,7 +106,7 @@ class ProductService {
                     acf?.faqCta.title ?? "",
 
                   url:
-                    acf?.faqCta.url ?? "#",
+                    getFrontendUrl(acf?.faqCta.url),
 
                   target:
                     acf?.faqCta.target ?? "",

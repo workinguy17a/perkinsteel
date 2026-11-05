@@ -33,8 +33,9 @@ export function mapHomepage(data: any): HomepageData {
                   .buttonOne.title ?? "",
 
               url:
-                homepagefield.bannerCta
-                  .buttonOne.url ?? "#",
+                getFrontendUrl(
+                  homepagefield.bannerCta.buttonOne.url
+                ),
 
               target:
                 homepagefield.bannerCta
@@ -50,8 +51,9 @@ export function mapHomepage(data: any): HomepageData {
                   .buttonTwo.title ?? "",
 
               url:
-                homepagefield.bannerCta
-                  .buttonTwo.url ?? "#",
+                getFrontendUrl(
+                  homepagefield.bannerCta.buttonTwo.url
+                ),
 
               target:
                 homepagefield.bannerCta
@@ -84,7 +86,7 @@ export function mapHomepage(data: any): HomepageData {
                   title:
                     item.catLink.title ?? "",
                   url:
-                    item.catLink.url ?? "#",
+                    getFrontendUrl(item.catLink.url),
                   target:
                     item.catLink.target ?? "",
                 }
@@ -103,7 +105,7 @@ export function mapHomepage(data: any): HomepageData {
           title:
             homepagefield?.whyChooseCta.title ?? "",
           url:
-            homepagefield?.whyChooseCta.url ?? "#",
+            getFrontendUrl(homepagefield?.whyChooseCta.url),
           target:
             homepagefield?.whyChooseCta.target ?? "",
         }
@@ -131,7 +133,7 @@ export function mapHomepage(data: any): HomepageData {
                   title:
                     item.industryCta.title ?? "",
                   url:
-                    item.industryCta.url ?? "#",
+                    getFrontendUrl(item.industryCta.url),
                   target:
                     item.industryCta.target ?? "",
                 }
@@ -206,7 +208,7 @@ export function mapHomepage(data: any): HomepageData {
                 homepagefield.faqCta.title ?? "",
 
               url:
-                homepagefield.faqCta.url ?? "#",
+                getFrontendUrl(homepagefield.faqCta.url),
 
               target:
                 homepagefield.faqCta.target ?? "",

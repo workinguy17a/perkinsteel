@@ -1,4 +1,5 @@
 import { AboutData } from "@/types/about";
+import { getFrontendUrl } from "@/utils/url";
 
 export function mapAbout(
   data: any
@@ -71,8 +72,9 @@ export function mapAbout(
                         .title ?? "",
 
                     url:
-                      item.industryCta
-                        .url ?? "#",
+                      getFrontendUrl(
+                        item.industryCta.url
+                      ),
 
                     target:
                       item.industryCta
@@ -118,8 +120,9 @@ export function mapAbout(
                   .title ?? "",
 
               url:
-                about.whyChooseCta
-                  .url ?? "#",
+                getFrontendUrl(
+                  about.whyChooseCta.url
+                ),
 
               target:
                 about.whyChooseCta
@@ -189,7 +192,7 @@ export function mapAbout(
                 about.faqCta.title ?? "",
 
               url:
-                about.faqCta.url ?? "#",
+                getFrontendUrl(about.faqCta.url),
 
               target:
                 about.faqCta.target ?? "",
