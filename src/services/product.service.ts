@@ -50,16 +50,47 @@ class ProductService {
     slug: string,
     first = 500
   ) {
+    const pageSize = Math.min(first, 100);
     const data: any = await graphqlFetch(
       GET_CATEGORY_PRODUCTS,
       {
         slug,
-        first,
+        first: pageSize,
+        after: null,
       }
     );
 
     if (!data.productCategory) {
       return null;
+    }
+
+    const productNodes = [
+      ...(data.productCategory.products?.nodes ?? []),
+    ];
+    let pageInfo = data.productCategory.products?.pageInfo;
+
+    while (
+      pageInfo?.hasNextPage &&
+      pageInfo.endCursor &&
+      productNodes.length < first
+    ) {
+      const nextPage: any = await graphqlFetch(
+        GET_CATEGORY_PRODUCTS,
+        {
+          slug,
+          first: pageSize,
+          after: pageInfo.endCursor,
+        }
+      );
+      const nextCategory = nextPage?.productCategory;
+      const nextProducts = nextCategory?.products?.nodes ?? [];
+
+      if (nextProducts.length === 0) {
+        break;
+      }
+
+      productNodes.push(...nextProducts);
+      pageInfo = nextCategory.products.pageInfo;
     }
 
     const acf =
@@ -75,6 +106,14 @@ class ProductService {
 
         bannerImage:
           acf?.categoryBanner
+            ?.node
+            ?.sourceUrl ?? "",
+
+        parentBannerImage:
+          data.productCategory.parent
+            ?.node
+            ?.acfProductCategory
+            ?.categoryBanner
             ?.node
             ?.sourceUrl ?? "",
 
@@ -115,7 +154,7 @@ class ProductService {
       },
 
       products:
-        data.productCategory.products.nodes.map(
+        productNodes.slice(0, first).map(
           mapProduct
         ),
     };

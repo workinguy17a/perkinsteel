@@ -26,9 +26,15 @@ export default function CategorySidebar({
   currency,
 }: CategorySidebarProps) {
 
-const activeCategory = categories.find(
+const currentCategory = categories.find(
   (category) => category.slug === activeSlug
 );
+
+const activeCategory = currentCategory?.parentSlug
+  ? categories.find(
+      (category) => category.slug === currentCategory.parentSlug
+    ) ?? currentCategory
+  : currentCategory;
 
 const childCategories = activeCategory?.children ?? [];
 const childIds = new Set(
@@ -56,7 +62,7 @@ const parentCategories = categories.filter(
                       <Link
                           href={`/category/${category.slug}`}
                           className={
-                              activeSlug === category.slug
+                              activeCategory?.slug === category.slug
                                   ? "active"
                                   : ""
                           }
@@ -86,6 +92,11 @@ const parentCategories = categories.filter(
                       <li key={category.id}>
                           <Link
                               href={`/category/${category.slug}`}
+                              className={
+                                  activeSlug === category.slug
+                                      ? "active"
+                                      : ""
+                              }
                           >
                               <span>
                                   {category.name}

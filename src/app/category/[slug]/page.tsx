@@ -32,7 +32,7 @@ export default async function CategoryPage({
       <InnerBanner
   title={data.category.name}
   description={data.category.description}
-  image={data.category.bannerImage}
+  image={data.category.bannerImage || data.category.parentBannerImage}
   breadcrumbs={[
     { label: "Home", href: "/" },
     { label: data.category.name },

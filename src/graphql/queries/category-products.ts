@@ -1,9 +1,26 @@
 export const GET_CATEGORY_PRODUCTS = `
-query GetCategoryProducts($slug: ID!, $first: Int = 500) {
+query GetCategoryProducts(
+  $slug: ID!
+  $first: Int = 100
+  $after: String
+) {
   productCategory(id: $slug, idType: SLUG) {
     databaseId
     name
     slug
+    parent {
+      node {
+        slug
+        acfProductCategory {
+          categoryBanner {
+            node {
+              sourceUrl
+              altText
+            }
+          }
+        }
+      }
+    }
           ancestors(first: 100) {
             nodes {
               slug
@@ -32,7 +49,11 @@ query GetCategoryProducts($slug: ID!, $first: Int = 500) {
           target
         }
     }
-    products(first: $first) {
+    products(first: $first, after: $after) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
       nodes {
         databaseId
         slug

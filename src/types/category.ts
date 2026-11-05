@@ -17,6 +17,7 @@ export interface Category {
   count?: number;
 
   parentSlug?: string | null;
+  parentBannerImage?: string;
 
   children?: Category[];
   shortTitle?: string;
