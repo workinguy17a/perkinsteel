@@ -848,25 +848,36 @@ section.category-content-section {
     padding-top: 30px;
 }
 
-section.category-content-section h2,section.category-content-section p {
+section.category-content-section h2,
+section.category-content-section p,
+section.category-content-section li,
+section.category-content-section h3 {
     color: var(--white);
 }
 
-section.category-content-section h2 {
+section.category-content-section h2,section.category-content-section h3 {
     font-size: 35px;
     font-weight: 500;
     margin-top: 30px;
+}
+
+section.category-content-section h3{
+    font-size:30px
 }
 
 section.category-content-section p {
     margin-top: 10px;
 }
 
-section.category-content-section p a {
+section.category-content-section li{
+    margin:5px 0
+}
+
+section.category-content-section p a,section.category-content-section li a {
     color: var(--red);
 }
 
-section.category-content-section p a:hover {
+section.category-content-section p a:hover,section.category-content-section li a:hover {
     color: var(--white);
 }
 .product-usp-list h3 {
